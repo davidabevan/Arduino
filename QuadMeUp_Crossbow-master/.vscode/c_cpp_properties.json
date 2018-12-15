@@ -1,0 +1,45 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceRoot}"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "${workspaceRoot}"
+                ]
+            },
+            "intelliSenseMode": "msvc-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "compilerPath": "/usr/bin/clang",
+            "defines": [
+                "FEATURE_TX_INPUT_SBUS"
+            ]
+        },
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino",
+                    "${workspaceRoot}",
+                    "~/Documents/Arduino/libraries/"
+                ]
+            },
+            "intelliSenseMode": "clang-x64",
+            "defines": [
+                "SPI_HAS_NOTUSINGINTERRUPT",
+                "FEATURE_TX_INPUT_SBUS",
+                "DEVICE_MODE_TX",
+                "DEVICE_MODE_RX"
+            ]
+        }
+    ],
+    "version": 3
+}
