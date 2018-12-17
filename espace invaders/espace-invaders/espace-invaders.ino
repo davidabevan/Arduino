@@ -23,22 +23,18 @@
  *  
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * Re PORTED For EPSDUINO     DB December 17/2018
+ *
  */
- //#include "sfr_defs.h"
-//#include "io.h"
-#include <ESP8266WiFi.h>
-//#include <SPI.h>
-//#include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
-#include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
-//#include "OLEDDisplayUi.h"
-//#include "ssd1306xled.h"
 
-//#include "SSD1306.h"
+#include <ESP8266WiFi.h>
+#include <SPI.h>
+#include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
+#include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
+#include "OLEDDisplayUi.h"
+
 // OLED SDA=D3, SCL=D4
-// Display Settings
-SSD1306Wire  display(0x3c, 4, 5);// using GPIO instead D0, D2 Espduino SCL SCA
-//SSD1306Wire  display(0x78, 4, 5);// using GPIO instead D3, D4
+SSD1306Wire  display(0x3c, 4, 5);
+
 #include "spritebank.h"
 
 #define MAXLEVELSHIELDED 3
@@ -55,12 +51,12 @@ uint8_t ShipPos = 64;
 
 #define joyX A0 // analog, left = 0, center ~=512, right=1024
 //#define joyY D8 // not used here
-#define joyBTN 15 // button was D8
-#define SOUND_PIN 4 // speaker + pin was D2
+#define joyBTN 15 // button
+#define SOUND_PIN 4 // speaker + pin
 
 void setup() {
 
-  //Serial.begin(115200);
+  Serial.begin(115200);
   WiFi.forceSleepBegin();
   
   display.init();
@@ -71,13 +67,13 @@ void setup() {
   pinMode(joyBTN, INPUT);
   pinMode(SOUND_PIN, OUTPUT);
   
-  //Serial.println();
-  //Serial.println("Ok");
+  Serial.println();
+  Serial.println("Ok");
   display.setTextAlignment(TEXT_ALIGN_LEFT);
   display.setFont(ArialMT_Plain_10);
   display.drawString(0, 0, "Tiny Space Invaders");
   display.display();
-  delay(5000);
+  delay(500);
 }
 
 void LoadMonstersLevels(int8_t Levels, SPACE *space) {
