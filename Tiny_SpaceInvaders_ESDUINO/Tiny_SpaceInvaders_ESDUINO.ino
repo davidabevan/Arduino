@@ -23,7 +23,7 @@
  *  
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * Re PORTED For EPSDUINO     DB December 17/2018
  */
 
 #include <ESP8266WiFi.h>
@@ -35,10 +35,7 @@
 #include "SSD1306.h"
 // OLED SDA=D3, SCL=D4
 // Display Settings
-const int I2C_DISPLAY_ADDRESS = 0x3c;
-const int SDA_PIN = 0;
-const int SDC_PIN = 2;
-SSD1306Wire  display(0x3c, D4, D3);
+SSD1306Wire  display(0x3c, 2, 0);// using GPIO instead D3, D4
 
 #include "spritebank.h"
 
@@ -56,8 +53,8 @@ uint8_t ShipPos = 64;
 
 #define joyX A0 // analog, left = 0, center ~=512, right=1024
 //#define joyY D8 // not used here
-#define joyBTN D8 // button
-#define SOUND_PIN D2 // speaker + pin
+#define joyBTN 15 // button was D8
+#define SOUND_PIN 4 // speaker + pin was D2
 
 void setup() {
 
