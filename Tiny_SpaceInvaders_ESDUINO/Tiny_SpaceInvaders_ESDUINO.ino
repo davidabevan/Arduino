@@ -35,6 +35,9 @@
 #include "SSD1306.h"
 // OLED SDA=D3, SCL=D4
 // Display Settings
+const int I2C_DISPLAY_ADDRESS = 0x3c;
+const int SDA_PIN = 0;
+const int SDC_PIN = 2;
 SSD1306Wire  display(0x3c, D4, D3);
 
 #include "spritebank.h"
