@@ -20,6 +20,7 @@
 //and use ssd1306xled Library for SSD1306 oled display 128x64
 //#include <avr/pgmspace.h>
 #include <pgmspace.h>
+//#include <pgmspace.h>
 typedef struct SPACE{
 int8_t UFOxPos=-120;
 uint8_t oneFrame=0;
