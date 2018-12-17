@@ -31,7 +31,7 @@
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
 #include "OLEDDisplayUi.h"
-
+#include "SSD1306.h"
 // OLED SDA=D3, SCL=D4
 SSD1306Wire  display(0x3c, D4, D3);
 
