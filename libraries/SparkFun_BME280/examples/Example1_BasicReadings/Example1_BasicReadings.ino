@@ -11,29 +11,29 @@
   
   This example shows how to read humidity, pressure, and current temperature from the BME280 over I2C.
 
-  todo
-  example set local ref pressure
-  fix repo description
-  example of reading/writing cal factors
-
+  Hardware connections:
+  BME280 -> Arduino
+  GND -> GND
+  3.3 -> 3.3
+  SDA -> A4
+  SCL -> A5
 */
 
-#include "Wire.h"
+#include <Wire.h>
 
 #include "SparkFunBME280.h"
-BME280 mySensor; //Global sensor object
+BME280 mySensor;
 
 void setup()
 {
   Serial.begin(9600);
-  while(!Serial);
   Serial.println("Reading basic values from BME280");
 
   Wire.begin();
 
   if (mySensor.beginI2C() == false) //Begin communication over I2C
   {
-    Serial.println("The chip did not respond. Please check wiring.");
+    Serial.println("The sensor did not respond. Please check wiring.");
     while(1); //Freeze
   }
 }

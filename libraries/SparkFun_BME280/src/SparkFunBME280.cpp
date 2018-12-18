@@ -10,7 +10,7 @@ Uses Wire.h for i2c operation
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.6.4
+Arduino IDE 1.8.5
 Teensy loader 1.23
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
@@ -21,11 +21,6 @@ Distributed as-is; no warranty is given.
 //See SparkFunBME280.h for additional topology notes.
 
 #include "SparkFunBME280.h"
-#include "stdint.h"
-#include <math.h>
-
-#include "Wire.h"
-#include "SPI.h"
 
 //****************************************************************************//
 //
@@ -41,7 +36,7 @@ BME280::BME280( void )
 	settings.commInterface = I2C_MODE; //Default to I2C
 
 	settings.I2CAddress = 0x77; //Default, jumper open is 0x77
-	settings.I2CPort = &Wire; //Default to Wire port
+	_hardPort = &Wire; //Default to Wire port
 
 	settings.chipSelectPin = 10; //Select CS pin for SPI
 	
@@ -52,6 +47,7 @@ BME280::BME280( void )
 	settings.tempOverSample = 1;
 	settings.pressOverSample = 1;
 	settings.humidOverSample = 1;
+    settings.tempCorrection = 0.0; // correction of temperature - added to the result
 }
 
 
@@ -73,7 +69,18 @@ uint8_t BME280::begin()
 	{
 
 	case I2C_MODE:
-		settings.I2CPort->begin(); //The caller can begin their port and set the speed. We just confirm it here otherwise it can be hard to debug.
+		
+		switch(_wireType)
+		{
+			case(HARD_WIRE):
+				_hardPort->begin(); //The caller can begin their port and set the speed. We just confirm it here otherwise it can be hard to debug.
+				break;
+			case(SOFT_WIRE):
+			#ifdef SoftwareWire_h
+				_softPort->begin(); //The caller can begin their port and set the speed. We just confirm it here otherwise it can be hard to debug.
+			#endif
+				break;
+		}
 		break;
 
 	case SPI_MODE:
@@ -107,8 +114,9 @@ uint8_t BME280::begin()
 	}
 
 	//Check communication with IC before anything else
-	uint8_t chipID = readRegister(BME280_CHIP_ID_REG); //Should return 0x60
-	if(chipID != 0x60) return(chipID); //Failed!
+	uint8_t chipID = readRegister(BME280_CHIP_ID_REG); //Should return 0x60 or 0x58
+	if(chipID != 0x58 && chipID != 0x60) // Is this BMP or BME?
+	return(chipID); //This is not BMP nor BME!
 
 	//Reading all compensation data, range 0x88:A1, 0xE1:E7
 	calibration.dig_T1 = ((uint16_t)((readRegister(BME280_DIG_T1_MSB_REG) << 8) + readRegister(BME280_DIG_T1_LSB_REG)));
@@ -145,17 +153,46 @@ uint8_t BME280::begin()
 	return(readRegister(BME280_CHIP_ID_REG)); //Should return 0x60
 }
 
+//Begin comm with BME280 over SPI
+bool BME280::beginSPI(uint8_t csPin)
+{
+	settings.chipSelectPin = csPin;
+	settings.commInterface = SPI_MODE;
+	
+	if(begin() == 0x58) return(true); //Begin normal init with these settings. Should return chip ID of 0x58 for BMP
+	if(begin() == 0x60) return(true); //Begin normal init with these settings. Should return chip ID of 0x60 for BME
+	return(false);
+}
+
 //Begin comm with BME280 over I2C
 bool BME280::beginI2C(TwoWire &wirePort)
 {
-	settings.I2CPort = &wirePort;
-	
+	_hardPort = &wirePort;
+	_wireType = HARD_WIRE;
+
 	settings.commInterface = I2C_MODE;
-	//settings.I2CAddress = 0x77; //We assume user has set the I2C address using setI2CAddress()
 	
-	if(begin() == 0x60) return(true); //Begin normal init with these settings. Should return chip ID of 0x60
+	//settings.I2CAddress = 0x77; //We assume user has set the I2C address using setI2CAddress()
+	if(begin() == 0x58) return(true); //Begin normal init with these settings. Should return chip ID of 0x58 for BMP
+	if(begin() == 0x60) return(true); //Begin normal init with these settings. Should return chip ID of 0x60 for BME
 	return(false);
 }
+
+//Begin comm with BME280 over software I2C
+#ifdef SoftwareWire_h
+bool BME280::beginI2C(SoftwareWire& wirePort)
+{
+	_softPort = &wirePort;
+	_wireType = SOFT_WIRE;
+
+	settings.commInterface = I2C_MODE;
+	//settings.I2CAddress = 0x77; //We assume user has set the I2C address using setI2CAddress()
+
+	if(begin() == 0x58) return(true); //Begin normal init with these settings. Should return chip ID of 0x58 for BMP
+	if(begin() == 0x60) return(true); //Begin normal init with these settings. Should return chip ID of 0x60 for BME
+	return(false);
+}
+#endif
 
 //Set the mode bits in the ctrl_meas register
 // Mode 00 = Sleep
@@ -285,17 +322,28 @@ uint8_t BME280::checkSampleValue(uint8_t userValue)
 {
 	switch(userValue) 
 	{
-		case(0): break; //Valid
-		case(1): break; //Valid
-		case(2): break; //Valid
-		case(4): break; //Valid
-		case(8): break; //Valid
-		case(16): break; //Valid
+		case(0): 
+			return 0;
+			break; //Valid
+		case(1): 
+			return 1;
+			break; //Valid
+		case(2): 
+			return 2;
+			break; //Valid
+		case(4): 
+			return 3;
+			break; //Valid
+		case(8): 
+			return 4;
+			break; //Valid
+		case(16): 
+			return 5;
+			break; //Valid
 		default: 
-			userValue = 1; //Default to 1x
+			return 1; //Default to 1x
 			break; //Good
 	}
-	return(userValue);	
 }
 
 //Set the global setting for the I2C address we want to communicate with
@@ -366,13 +414,12 @@ float BME280::getReferencePressure()
 	return(_referencePressure);
 }
 
-
-
 float BME280::readFloatAltitudeMeters( void )
 {
 	float heightOutput = 0;
 	
-	heightOutput = ((float)-45846.2)*(pow(((float)readFloatPressure()/(float)_referencePressure), 0.190263) - (float)1);
+	//heightOutput = ((float)-45846.2)*(pow(((float)readFloatPressure()/(float)_referencePressure), 0.190263) - (float)1);
+	heightOutput = ((float)-44330.77)*(pow(((float)readFloatPressure()/(float)_referencePressure), 0.190263) - (float)1); //Corrected, see issue 30
 	return heightOutput;
 	
 }
@@ -410,10 +457,7 @@ float BME280::readFloatHumidity( void )
 	var1 = (var1 > 419430400 ? 419430400 : var1);
 
 	return (float)(var1>>12) / 1024.0;
-
 }
-
-
 
 //****************************************************************************//
 //
@@ -440,7 +484,7 @@ float BME280::readTempC( void )
 	t_fine = var1 + var2;
 	float output = (t_fine * 5 + 128) >> 8;
 
-	output = output / 100;
+	output = output / 100 + settings.tempCorrection;
 	
 	return output;
 }
@@ -451,6 +495,36 @@ float BME280::readTempF( void )
 	output = (output * 9) / 5 + 32;
 
 	return output;
+}
+
+//****************************************************************************//
+//
+//  Dew point Section
+//
+//****************************************************************************//
+// Returns Dew point in DegC
+double BME280::dewPointC(void)
+{
+  double celsius = readTempC(); 
+  double humidity = readFloatHumidity();
+  // (1) Saturation Vapor Pressure = ESGG(T)
+  double RATIO = 373.15 / (273.15 + celsius);
+  double RHS = -7.90298 * (RATIO - 1);
+  RHS += 5.02808 * log10(RATIO);
+  RHS += -1.3816e-7 * (pow(10, (11.344 * (1 - 1/RATIO ))) - 1) ;
+  RHS += 8.1328e-3 * (pow(10, (-3.49149 * (RATIO - 1))) - 1) ;
+  RHS += log10(1013.246);
+         // factor -3 is to adjust units - Vapor Pressure SVP * humidity
+  double VP = pow(10, RHS - 3) * humidity;
+         // (2) DEWPOINT = F(Vapor Pressure)
+  double T = log(VP/0.61078);   // temp var
+  return (241.88 * T) / (17.558 - T);
+}
+
+// Returns Dew point in DegF
+double BME280::dewPointF(void)
+{
+	return(dewPointC() * 1.8 + 32); //Convert C to F
 }
 
 //****************************************************************************//
@@ -468,18 +542,40 @@ void BME280::readRegisterRegion(uint8_t *outputPointer , uint8_t offset, uint8_t
 	{
 
 	case I2C_MODE:
-		settings.I2CPort->beginTransmission(settings.I2CAddress);
-		settings.I2CPort->write(offset);
-		settings.I2CPort->endTransmission();
-
-		// request bytes from slave device
-		settings.I2CPort->requestFrom(settings.I2CAddress, length);
-		while ( (settings.I2CPort->available()) && (i < length))  // slave may send less than requested
+		switch(_wireType)
 		{
-			c = settings.I2CPort->read(); // receive a byte as character
-			*outputPointer = c;
-			outputPointer++;
-			i++;
+			case(HARD_WIRE):
+				_hardPort->beginTransmission(settings.I2CAddress);
+				_hardPort->write(offset);
+				_hardPort->endTransmission();
+
+				// request bytes from slave device
+				_hardPort->requestFrom(settings.I2CAddress, length);
+				while ( (_hardPort->available()) && (i < length))  // slave may send less than requested
+				{
+					c = _hardPort->read(); // receive a byte as character
+					*outputPointer = c;
+					outputPointer++;
+					i++;
+				}
+				break;
+			case(SOFT_WIRE):
+			#ifdef SoftwareWire_h
+				_softPort->beginTransmission(settings.I2CAddress);
+				_softPort->write(offset);
+				_softPort->endTransmission();
+
+				// request bytes from slave device
+				_softPort->requestFrom(settings.I2CAddress, length);
+				while ( (_softPort->available()) && (i < length))  // slave may send less than requested
+				{
+					c = _softPort->read(); // receive a byte as character
+					*outputPointer = c;
+					outputPointer++;
+					i++;
+				}
+			#endif
+				break;
 		}
 		break;
 
@@ -513,15 +609,35 @@ uint8_t BME280::readRegister(uint8_t offset)
 	switch (settings.commInterface) {
 
 	case I2C_MODE:
-		settings.I2CPort->beginTransmission(settings.I2CAddress);
-		settings.I2CPort->write(offset);
-		settings.I2CPort->endTransmission();
-
-		settings.I2CPort->requestFrom(settings.I2CAddress, numBytes);
-		while ( settings.I2CPort->available() ) // slave may send less than requested
+		switch(_wireType)
 		{
-			result = settings.I2CPort->read(); // receive a byte as a proper uint8_t
+			case(HARD_WIRE):
+				_hardPort->beginTransmission(settings.I2CAddress);
+				_hardPort->write(offset);
+				_hardPort->endTransmission();
+
+				_hardPort->requestFrom(settings.I2CAddress, numBytes);
+				while ( _hardPort->available() ) // slave may send less than requested
+				{
+					result = _hardPort->read(); // receive a byte as a proper uint8_t
+				}
+				break;
+			
+			case(SOFT_WIRE):
+			#ifdef SoftwareWire_h
+				_softPort->beginTransmission(settings.I2CAddress);
+				_softPort->write(offset);
+				_softPort->endTransmission();
+
+				_softPort->requestFrom(settings.I2CAddress, numBytes);
+				while ( _softPort->available() ) // slave may send less than requested
+				{
+					result = _softPort->read(); // receive a byte as a proper uint8_t
+				}
+			#endif
+				break;
 		}
+		
 		break;
 
 	case SPI_MODE:
@@ -556,12 +672,26 @@ void BME280::writeRegister(uint8_t offset, uint8_t dataToWrite)
 	{
 	case I2C_MODE:
 		//Write the byte
-		settings.I2CPort->beginTransmission(settings.I2CAddress);
-		settings.I2CPort->write(offset);
-		settings.I2CPort->write(dataToWrite);
-		settings.I2CPort->endTransmission();
-		break;
 
+		switch(_wireType)
+		{
+			case(HARD_WIRE):
+				_hardPort->beginTransmission(settings.I2CAddress);
+				_hardPort->write(offset);
+				_hardPort->write(dataToWrite);
+				_hardPort->endTransmission();
+				break;
+			case(SOFT_WIRE):
+			#ifdef SoftwareWire_h
+				_softPort->beginTransmission(settings.I2CAddress);
+				_softPort->write(offset);
+				_softPort->write(dataToWrite);
+				_softPort->endTransmission();
+			#endif
+				break;
+		}
+		break;
+		
 	case SPI_MODE:
 		// take the chip select low to select the device:
 		digitalWrite(settings.chipSelectPin, LOW);

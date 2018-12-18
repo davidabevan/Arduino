@@ -49,10 +49,11 @@ uint8_t ShipDead = 0;
 uint8_t ShipPos = 64;
 // fin var public
 
-#define joyX A0 // analog, left = 0, center ~=512, right=1024
-//#define joyY D8 // not used here
-#define joyBTN 15 // button
-#define SOUND_PIN 4 // speaker + pin
+//#define joyX A0 // analog, left = 0, center ~=512, right=1024
+#define joyX 16 // left D0
+#define joyY 14 // right  D5
+#define joyBTN 2 // button D4 fire
+#define SOUND_PIN 4 // speaker + pin D2
 
 void setup() {
 
@@ -63,17 +64,18 @@ void setup() {
   display.flipScreenVertically();
 
   pinMode(joyX, INPUT);
-  //pinMode(joyY, INPUT);
+  pinMode(joyY, INPUT);
   pinMode(joyBTN, INPUT);
   pinMode(SOUND_PIN, OUTPUT);
   
   Serial.println();
   Serial.println("Ok");
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_10);
-  display.drawString(0, 0, "Tiny Space Invaders");
-  display.display();
-  delay(500);
+  //display.setTextAlignment(TEXT_ALIGN_LEFT);
+  //display.setFont(ArialMT_Plain_10);
+  //display.drawString(0, 0, "Tiny Space Invaders");
+  //display.display();
+  //delay(5000);
+  display.clear();
 }
 
 void LoadMonstersLevels(int8_t Levels, SPACE *space) {
@@ -166,7 +168,6 @@ Bypass:
         } MonsterRefreshMove(&space);
         space.frame = 0;
       }
-
       int8_t joyVect = map(analogRead(joyX), 0, 1023, 5, -4)-1;
 
       if(VarPot+joyVect>0 && VarPot+joyVect<=114) {
@@ -277,6 +278,7 @@ void drawGameWindow(SPACE *space) {
 void drawIntroImage() {
   display.clear();
   display.drawXbm(0, 0, 128, 55, intro);
+  //display.drawXbm(0, 0, 128, 55, back);
   display.display();  
 }
 
