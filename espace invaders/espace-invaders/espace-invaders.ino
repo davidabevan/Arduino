@@ -50,9 +50,9 @@ uint8_t ShipPos = 64;
 // fin var public
 
 //#define joyX A0 // analog, left = 0, center ~=512, right=1024
-#define joyX 16 // left D0
+#define joyX 2 // left D4
 #define joyY 14 // right  D5
-#define joyBTN 2 // button D4 fire
+#define joyBTN 0 // button D3 fire
 #define SOUND_PIN 4 // speaker + pin D2
 
 void setup() {
