@@ -1,5 +1,6 @@
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>
+// Speaker to D9 D10 may use 100 ohm resistor
 #include <toneAC.h>
 #include <EEPROM.h>
  
@@ -8,7 +9,8 @@
 #define OLED_ADDRESS 0x3C
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
- 
+ //SCL=A5
+ //SCA=A4
 // Input settings
 // With my own button board
 // Red goes to Board GND
