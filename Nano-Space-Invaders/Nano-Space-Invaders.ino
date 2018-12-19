@@ -4,6 +4,7 @@
 #include <EEPROM.h>
  
 // DISPLAY SETTINGS
+
 #define OLED_ADDRESS 0x3C
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
