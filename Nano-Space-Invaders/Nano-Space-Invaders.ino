@@ -10,6 +10,12 @@
 #define SCREEN_HEIGHT 64
  
 // Input settings
+// With my own button board
+// Red goes to Board GND
+// Black     goes to VCC
+//Yellow to D4
+//Purple to D5
+//Green  to D6
 #define FIRE_BUT 6
 #define RIGHT_BUT 5
 #define LEFT_BUT 4
@@ -31,7 +37,7 @@
 #define LARGEST_ALIEN_WIDTH 11
 #define SPACE_BETWEEN_ROWS 9
 #define INVADERS_DROP_BY 4            // pixel amount that invaders move down by
-#define INVADERS_SPEED 12             // speed of movement, lower=faster.
+#define INVADERS_SPEED 5             // speed of movement, lower=faster.Default = 12
 #define INVADER_HEIGHT 8
 #define EXPLOSION_GFX_TIME 7  // How long an ExplosionGfx remains on screen before dissapearing
 #define INVADERS_Y_START MOTHERSHIP_HEIGHT-1
