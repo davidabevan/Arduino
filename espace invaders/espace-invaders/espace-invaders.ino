@@ -48,11 +48,11 @@ uint8_t SpeedShootMonster = 0;
 uint8_t ShipDead = 0;
 uint8_t ShipPos = 64;
 // fin var public
-
-//#define joyX A0 // analog, left = 0, center ~=512, right=1024
-#define joyX 2 // left D4
-#define joyY 14 // right  D5
-#define joyBTN 0 // button D3 fire
+//D1, SCL D2 SDA(GPIO5, GPIO4 ARE USED FOR DISPLAY
+#define joyX A0 // analog, left = 0, center ~=512, right=1024
+//#define joyX 2 // left D4
+//#define joyY 14 // right  D5
+#define joyBTN 0 // pad D0  fire button, 10K PULLUP
 #define SOUND_PIN 4 // speaker + pin D2
 
 void setup() {
@@ -64,7 +64,7 @@ void setup() {
   display.flipScreenVertically();
 
   pinMode(joyX, INPUT);
-  pinMode(joyY, INPUT);
+ // pinMode(joyY, INPUT);
   pinMode(joyBTN, INPUT);
   pinMode(SOUND_PIN, OUTPUT);
   
@@ -100,7 +100,8 @@ NEWGAME:;
   LEVELS = 0;
   while (1) {
     drawIntroImage();
-    if (digitalRead(joyBTN) == HIGH) {
+    // when grounded activates
+    if (digitalRead(joyBTN) == LOW) {
       Sound(100, 125);
       Sound(50, 125);
       break;
@@ -173,8 +174,8 @@ Bypass:
       if(VarPot+joyVect>0 && VarPot+joyVect<=114) {
         VarPot += joyVect;
       }
-      
-      if((digitalRead(joyBTN) == HIGH) && (MyShootReady == SHOOTS)) {
+     // Pad D0 works when grounded
+      if((digitalRead(joyBTN) == LOW) && (MyShootReady == SHOOTS)) {
         Sound(200, 4);
         MyShootReady = 0;
         space.MyShootBall = 6;
