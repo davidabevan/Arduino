@@ -6,38 +6,7 @@
 //#include <Preferences.h>
 
 //Preferences prefs;
- //Wiring Diagram
-//****************************************************
-//                             LCD_PIN    Wemos
-//TFT LCD Pin VCC                 *1       5V
-//TFT LCD Pin GND                 *2       GND
-//TFT LCD Pin CS  to GPIO_5       *3       D1
-//TFT LCD Pin RST to RST          *4       RST
-//TFT LCD Pin DC to GPIO_4        *5       D2
-//TFT LCD Pin MOSI to GPIO_13     *6       D7
-//TFT LCD Pin CLK to GPIO_14      *7       D5
-//TFT LCD Pin LED to +3.3 V.      *8       3.3V
-//TFT LCD Pin MISO ( not use )    *9       D6
-//^^^^^^TOUCH^^^^^^^^^^^^^^^^^^^^^^^^
-// TFT LCD PIN T-CLK GPIO14      *10       D5
-// TFT LCD PIN T-CS GPIO0        *11       D3
-// TFT LCD PIN T-DIN GPIO13      *12       D7
-// TFT LCD PIN T-DO GPIO12       *13       D6
-// TFT LCD PIN T-IRQ GPIO2       *14       D4
-//****************************************************
-#include "SPI.h"
-#include "Adafruit_GFX.h"
-#include "Adafruit_ILI9341.h"
 
-// For the Adafruit shield, these are the default.
-#define TFT_DC 4
-#define TFT_CS 5
-
-// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
-Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
-// If using the breakout, change pins as desired
-//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
-//****************************
 uint16_t CBLACK,CBLUE,CRED,CGREEN,CCYAN,CMAGENTA,CYELLOW,CWHITE,CGRAY,CDARK,CGRAY2,CBLACKF,CWHITEF,CWHITEFIG,CBLACKFIG,CBLACKCONT;
 
 int cycle=0; // 
@@ -274,7 +243,7 @@ void drawBitmap(int16_t x, int16_t y,
   for(j=0; j<h; j++) {
     for(i=0; i<w; i++ ) {
       if(pgm_read_byte(bitmap + j * byteWidth + i / 8) & (128 >> (i & 7))) {
-        tft.drawPixel(x+i, y+j, color);
+        M5.Lcd.drawPixel(x+i, y+j, color);
       }      
     }
   }
@@ -294,19 +263,18 @@ void tone_volume(uint16_t frequency, uint32_t duration) {
    if (remains<200) {
     music[remains*999/200]=0;
    }
-//   M5.Speaker.playMusic(music,5000); // ttttooooodooooooo 
+   M5.Speaker.playMusic(music,5000);  
    remains-=200;
   } 
 }
 //****************************
 void beep(int leng) {
-//  if (sound) M5.Speaker.setVolume(1); else M5.Speaker.setVolume(0);// toooooooodddddooooooooooooooo            
+  if (sound) M5.Speaker.setVolume(1); else M5.Speaker.setVolume(0);            
   tone_volume(1000,leng); 
 }  
 //****************************
 void definecolors() {
  CBLACK  =0x0000;
-// BLACK  = ILI9341_BLACK
  CBLUE   =0x07FF;  //0x001F;
  CRED    =0xF800;
  CGREEN  =0x07E0;
@@ -333,22 +301,53 @@ uint16_t getColor(uint8_t red, uint8_t green, uint8_t blue)
 }
 //****************************
 void clearstatus() {
-  tft.fillRect(240,166,80,20,ILI9341_BLACK);             
-  tft.drawFastHLine(10,237,220,ILI9341_BLACK);   
-  tft.drawFastHLine(10,239,220,ILI9341_BLACK);  
+  M5.Lcd.fillRect(240,166,80,20,BLACK);             
+  M5.Lcd.drawFastHLine(10,237,220,BLACK);   
+  M5.Lcd.drawFastHLine(10,239,220,BLACK);  
 }  
 
+ //Wiring Diagram
+//****************************************************
+//                             LCD_PIN    Wemos
+//TFT LCD Pin VCC                 *1       5V
+//TFT LCD Pin GND                 *2       GND
+//TFT LCD Pin CS  to GPIO_5       *3       D1
+//TFT LCD Pin RST to RST          *4       RST
+//TFT LCD Pin DC to GPIO_4        *5       D2
+//TFT LCD Pin MOSI to GPIO_13     *6       D7
+//TFT LCD Pin CLK to GPIO_14      *7       D5
+//TFT LCD Pin LED to +3.3 V.      *8       3.3V
+//TFT LCD Pin MISO ( not use )    *9       D6
+//^^^^^^TOUCH^^^^^^^^^^^^^^^^^^^^^^^^
+// TFT LCD PIN T-CLK GPIO14      *10       D5
+// TFT LCD PIN T-CS GPIO0        *11       D3
+// TFT LCD PIN T-DIN GPIO13      *12       D7
+// TFT LCD PIN T-DO GPIO12       *13       D6
+// TFT LCD PIN T-IRQ GPIO2       *14       D4
+//****************************************************
+#include "SPI.h"
+#include "Adafruit_GFX.h"
+#include "Adafruit_ILI9341.h"
 
+// For the Adafruit shield, these are the default.
+#define TFT_DC 4
+#define TFT_CS 5
+
+// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+// If using the breakout, change pins as desired
+//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
+//****************************
 void setup() {      
   Serial.begin(115200);
   Serial.flush();  
   Serial.println(F("Start"));       
   tft.begin();   
   
-//  prefs.begin("AM_Chess", false); // WILL NOT COMPILE NEED TO INVESTIGATE 
+  prefs.begin("AM_Chess", false);  
             
-//  tft.setBrightness(200);    // BRIGHTNESS = MAX 255// NO CONSTRUCTOR FOR ILI9341
-  tft.fillScreen(ILI9341_BLACK);     // CLEAR SCREEN
+  tft.setBrightness(200);    // BRIGHTNESS = MAX 255
+  tft.fillScreen(BLACK);     // CLEAR SCREEN
   tft.setRotation(0);        // SCREEN ROTATION = 0  
   definecolors();
   beep(100);      
@@ -362,42 +361,42 @@ void setup() {
   }     
   tft.setTextColor(getColor(230,230,200));
   tft.setTextSize(2);  
-  tft.setCursor(50,30); tft.print("Arduino Mega Chess");
-  tft.setCursor(88,50); tft.print("for M5Stack");
+  tft.setCursor(50,30); M5.Lcd.print("Arduino Mega Chess");
+  tft.setCursor(88,50); M5.Lcd.print("for M5Stack");
   tft.setTextColor(CGRAY);
-  tft.setCursor(62,70); tft.print("by Sergey Urusov");
+  tft.setCursor(62,70); M5.Lcd.print("by Sergey Urusov");
   tft.setTextSize(1);  
-  tft.setCursor(100,95); tft.print("urusovsv@gmail.com");
-  tft.setCursor(85,110); tft.print("version 1.0, engine 1.4");
-  tft.setCursor(80,220); tft.print("press any key to READ this");
+  tft.setCursor(100,95); M5.Lcd.print("urusovsv@gmail.com");
+  tft.setCursor(85,110); M5.Lcd.print("version 1.0, engine 1.4");
+  tft.setCursor(80,220); M5.Lcd.print("press any key to READ this");
   tft.setTextColor(CWHITEFIG);
   tft.drawRect(38,150,60,30,CGRAY);    
   tft.drawRect(130,150,60,30,CGRAY);    
   tft.drawRect(225,150,60,30,CGRAY);    
   tft.setTextSize(1);  
-  tft.setCursor(57,162); tft.print("Left");
-  tft.setCursor(143,162); tft.print("Choice");
-  tft.setCursor(240,162); tft.print("Right");
-  tft.setCursor(110,190); tft.print("long press - menu");
-  tft.setCursor(110,200); tft.print("or exit from menu");
+  tft.setCursor(57,162); M5.Lcd.print("Left");
+  tft.setCursor(143,162); M5.Lcd.print("Choice");
+  tft.setCursor(240,162); M5.Lcd.print("Right");
+  tft.setCursor(110,190); M5.Lcd.print("long press - menu");
+  tft.setCursor(110,200); M5.Lcd.print("or exit from menu");
   
   uint32_t tim=millis();
   while (millis()-tim<1500) { 
-//     M5.update();
-//    if (M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()) {////toooooooooooooooooodoooooooooooooooooooooo
+     M5.update();
+    if (M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()) {
       beep(100);
       tft.fillRect(75,220,180,12,CBLACK);    
       tft.setTextColor(CGRAY);
-      tft.setCursor(77,220); tft.print("press any key to ENTER game");
+      tft.setCursor(77,220); M5.Lcd.print("press any key to ENTER game");
       while (millis()-tim<30000) { 
-       // M5.update();
-        //if (M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()) break;//  ttttttoooooooooodddddddooooooooooooo
+        M5.update();
+        if (M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()) break;
       }
       break;   
-  //  }
+    }
   }
   beep(100);      
-  tft.fillScreen(ILI9341_BLACK);     // CLEAR SCREEN
+  tft.fillScreen(BLACK);     // CLEAR SCREEN
   initboard();
 }
 //****************************
@@ -409,11 +408,11 @@ void initboard() {
   tft.setTextSize(1);  
   for (int j=1;j<9;j++) {
    tft.setCursor(0,j*28-17);  
-   if (rotate) tft.print(j); else tft.print(9-j);
+   if (rotate) M5.Lcd.print(j); else M5.Lcd.print(9-j);
   }
   for (byte i=1;i<9;i++) { 
    tft.setCursor(i*28-9,227);    
-   if (rotate) tft.print(char(96+9-i)); else tft.print(char(96+i));  
+   if (rotate) M5.Lcd.print(char(96+9-i)); else M5.Lcd.print(char(96+i));  
   }         
   initscreen();          
 }
@@ -439,13 +438,13 @@ void loop() {
     animate_step(cur_step-1,false);    
     clearstatus();    
     if (lastscore>9000) {       
-      tft.setTextSize(1);    
-      tft.setTextColor(CGREEN,CBLACK);       
-      tft.setCursor(260,176); 
+      M5.Lcd.setTextSize(1);    
+      M5.Lcd.setTextColor(CGREEN,CBLACK);       
+      M5.Lcd.setCursor(260,176); 
       if (lastscore<9999) {
-       tft.print("# in "); 
-       tft.print((9999-lastscore)/2+1); tft.print(F(" st"));        
-      } else tft.print("Checkmate"); 
+       M5.Lcd.print("# in "); 
+       M5.Lcd.print((9999-lastscore)/2+1); M5.Lcd.print(F(" st"));        
+      } else M5.Lcd.print("Checkmate"); 
     } else if (lastscore<-9000) {
       tft.setTextSize(1);    
       tft.setTextColor(CRED,CBLACK);       
@@ -505,7 +504,7 @@ void gui() {
     }    
    }   
 //   M5.update(); 
-//   if (M5.BtnB.wasPressed()) // toooodoooo
+   if (M5.BtnB.wasPressed()) 
     if (lastpressed==0) lastpressed=millis();    // 
 //   if (M5.BtnA.wasPressed()) //todddddddddddddddoooooooooooooooooo
     if (lastpressedleft==0) lastpressedleft=millis();    // 
@@ -605,16 +604,16 @@ void gui() {
        } break;
        case 2:  
         if (submenu) { //load game
-//         short cur_step_=prefs.getShort("cur_step");// PREFS AGAIN TO CHECKOUT
-//         short limit_=prefs.getShort("limit");
+         short cur_step_=prefs.getShort("cur_step");
+         short limit_=prefs.getShort("limit");
          if (cur_step>0&&cur_step<1000&&limit>=0&&limit<3) {
           initboard();
-//          cur_step=cur_step_; limit=limit_;//NNNNNNNNNNNN
-//          sound=prefs.getBool("sound");
-//          rotate=prefs.getBool("rotate");
-//          prefs.getBytes("pole",pole,sizeof(pole)); 
-  //        prefs.getBytes("steps",steps,sizeof(step_type)*cur_step); 
-    //      beep(100);
+          cur_step=cur_step_; limit=limit_;
+          sound=prefs.getBool("sound");
+          rotate=prefs.getBool("rotate");
+          prefs.getBytes("pole",pole,sizeof(pole)); 
+          prefs.getBytes("steps",steps,sizeof(step_type)*cur_step); 
+          beep(100);
          } else {
           beep(1000); sound=1; rotate=0; limit=0; cur_step=1;
          }          
@@ -653,12 +652,12 @@ void gui() {
        } break;  
        case 3: 
        if (submenu) { //save game
-//         prefs.putShort("cur_step",cur_step);// TO CHECKOUT
-//         prefs.putShort("limit",limit);
-  //       prefs.putBool("sound",sound);
- //        prefs.putBool("rotate",rotate);
- //        prefs.putBytes("pole",pole,sizeof(pole)); 
-  //       prefs.putBytes("steps",steps,sizeof(step_type)*cur_step); 
+         prefs.putShort("cur_step",cur_step);
+         prefs.putShort("limit",limit);
+         prefs.putBool("sound",sound);
+         prefs.putBool("rotate",rotate);
+         prefs.putBytes("pole",pole,sizeof(pole)); 
+         prefs.putBytes("steps",steps,sizeof(step_type)*cur_step); 
          beep(50); delay(50); beep(50); delay(50); beep(50);                                 
         //File file = SD.open("/AM_Chess.sav", FILE_WRITE);                
         //if (file) {          
