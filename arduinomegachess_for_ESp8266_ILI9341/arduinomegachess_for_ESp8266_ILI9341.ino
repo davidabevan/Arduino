@@ -51,6 +51,14 @@ const int fig_weight[]={0,100,320,330,500,900,0};
 const char fig_symb[]="  NBRQK";
 unsigned long count;
 boolean rotate=false;
+//buttons
+#define M5_BtnA 16// D0
+#define M5_BtnB 1
+#define M5_BtnC 2
+//#define BTN_A  0
+//#define BTN_B  1
+//#define BTN_C  2
+//int buttonstate = 0;
 const signed char polezero[8][8] PROGMEM={
              {  0,  0,  0,  0,  0,  0,  0,  0},
              {  0,  0,  0,  0,  0,  0,  0,  0},
@@ -339,7 +347,13 @@ void clearstatus() {
 }  
 
 
-void setup() {      
+void setup() { 
+ pinMode(M5_BtnA, INPUT_PULLUP);
+ pinMode(M5_BtnB, INPUT);
+ pinMode(M5_BtnC, INPUT);
+ // pinMode(BTN_A, INPUT);
+  //pinMode(BTN_B, INPUT);
+  //pinMode(BTN_C, INPUT);     
   Serial.begin(115200);
   Serial.flush();  
   Serial.println(F("Start"));       
@@ -384,17 +398,23 @@ void setup() {
   uint32_t tim=millis();
   while (millis()-tim<1500) { 
 //     M5.update();
-//    if (M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()) {////toooooooooooooooooodoooooooooooooooooooooo
+  //  if (M5_BtnA.wasPressed()||M5_BtnB.wasPressed()||M5_BtnC.wasPressed()) {////toooooooooooooooooodoooooooooooooooooooooo
+      if(digitalRead(M5_BtnA)==LOW)
+  //if(digitalRead(M5_BtnB)==0)
+  //if(digitalRead(M5_BtnC)==0)
       beep(100);
       tft.fillRect(75,220,180,12,CBLACK);    
       tft.setTextColor(CGRAY);
       tft.setCursor(77,220); tft.print("press any key to ENTER game");
-      while (millis()-tim<30000) { 
+    //  while (millis()-tim<30000) { 
        // M5.update();
         //if (M5.BtnA.wasPressed()||M5.BtnB.wasPressed()||M5.BtnC.wasPressed()) break;//  ttttttoooooooooodddddddooooooooooooo
-      }
-      break;   
-  //  }
+           //  if(digitalRead(M5_BtnA)==0)
+  //if(digitalRead(M5_BtnB)==0)
+  //if(digitalRead(M5_BtnC)==0) break;
+//      }
+  //    break;   
+    // }
   }
   beep(100);      
   tft.fillScreen(ILI9341_BLACK);     // CLEAR SCREEN
