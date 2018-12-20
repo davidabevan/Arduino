@@ -1,7 +1,7 @@
 //ArduinoMega Chess 1.0 M5Stack
 //engine 1.4 
 //Sergey Urusov, ususovsv@gmail.com
-
+// NEEDS MUCH WORK DB 
 //#include <M5Stack.h> 
 //#include <Preferences.h>
 
@@ -349,7 +349,7 @@ void setup() {
             
 //  tft.setBrightness(200);    // BRIGHTNESS = MAX 255// NO CONSTRUCTOR FOR ILI9341
   tft.fillScreen(ILI9341_BLACK);     // CLEAR SCREEN
-  tft.setRotation(0);        // SCREEN ROTATION = 0  
+  tft.setRotation(1);        // SCREEN ROTATION = 0  
   definecolors();
   beep(100);      
   for (int i=0;i<MAXSTEPS;i++) {
