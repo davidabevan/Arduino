@@ -8,49 +8,55 @@
 #include <EEPROM.h> 
 // added
 #define DEBUG
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_TFTLCD.h> // Hardware-specific library
-#include <SPI.h>
-#include <SD.h>
+ //Wiring Diagram
+//****************************************************
+//                             LCD_PIN    Wemos
+//TFT LCD Pin VCC                 *1       5V
+//TFT LCD Pin GND                 *2       GND
+//TFT LCD Pin CS  to GPIO_5       *3       D1
+//TFT LCD Pin RST to RST          *4       RST
+//TFT LCD Pin DC to GPIO_4        *5       D2
+//TFT LCD Pin MOSI to GPIO_13     *6       D7
+//TFT LCD Pin CLK to GPIO_14      *7       D5
+//TFT LCD Pin LED to +3.3 V.      *8       3.3V
+//TFT LCD Pin MISO ( not use )    *9       D6
+//^^^^^^TOUCH^^^^^^^^^^^^^^^^^^^^^^^^
+// TFT LCD PIN T-CLK GPIO14      *10       D5
+// TFT LCD PIN T-CS GPIO0        *11       D3
+// TFT LCD PIN T-DIN GPIO13      *12       D7
+// TFT LCD PIN T-DO GPIO12       *13       D6
+// TFT LCD PIN T-IRQ GPIO2       *14       D4
+//****************************************************
 
-// The control pins for the LCD can be assigned to any digital or
-// analog pins...but we'll use the analog pins as this allows us to
-// double up the pins with the touch screen (see the TFT paint example).
-#define LCD_CS A3 // Chip Select goes to Analog 3
-#define LCD_CD A2 // Command/Data goes to Analog 2
-#define LCD_WR A1 // LCD Write goes to Analog 1
-#define LCD_RD A0 // LCD Read goes to Analog 0
 
-// When using the BREAKOUT BOARD only, use these 8 data lines to the LCD:
-// For the Arduino Uno, Duemilanove, Diecimila, etc.:
-//   D0 connects to digital pin 8  (Notice these are
-//   D1 connects to digital pin 9   NOT in order!)
-//   D2 connects to digital pin 2
-//   D3 connects to digital pin 3
-//   D4 connects to digital pin 4
-//   D5 connects to digital pin 5
-//   D6 connects to digital pin 6
-//   D7 connects to digital pin 7
-// For the Arduino Mega, use digital pins 22 through 29
-// (on the 2-row header at the end of the board).
 
-// For Arduino Uno/Duemilanove, etc
-//  connect the SD card with DI going to pin 11, DO going to pin 12 and SCK going to pin 13 (standard)
-//  Then pin 10 goes to CS (or whatever you have set up)
-#if defined __AVR_ATmega2560__
-#define SD_SCK 13
-#define SD_MISO 12
-#define SD_MOSI 11
-// our TFT wiring
-Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, A4);
-#endif
+
+#include "SPI.h"
+#include "Adafruit_GFX.h"
+#include "Adafruit_ILI9341.h"
+#include <XPT2046_Touchscreen.h>
+
+#define CS_PIN  0
+#define TFT_DC  4
+#define TFT_CS   5
+// MOSI=11, MISO=12, SCK=13
+
+XPT2046_Touchscreen ts(CS_PIN);
+#define TIRQ_PIN  2
+//XPT2046_Touchscreen ts(CS_PIN);  // Param 2 - NULL - No interrupts
+//XPT2046_Touchscreen ts(CS_PIN, 255);  // Param 2 - 255 - No interrupts
+//XPT2046_Touchscreen ts(CS_PIN, TIRQ_PIN);  // Param 2 - Touch IRQ Pin - interrupt enabled polling
+
+//ILI9341_t3 tft = ILI9341_t3(TFT_CS, TFT_DC);
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 uint16_t BLACK,BLUE,RED,GREEN,CYAN,MAGENTA,YELLOW,WHITE,GRAY,DARK,GRAY2,BLACKF,WHITEF;
 //Adafruit_TFTLCD tft;
-#define YP A2//A1  // must be an analog pin, use "An" notation!
-#define XM A3//A2  // must be an analog pin, use "An" notation!
-#define YM 8//7   // can be a digital pin
-#define XP 9//6   // can be a digital pin
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+//#define YP A2//A1  // must be an analog pin, use "An" notation!
+//#define XM A3//A2  // must be an analog pin, use "An" notation!
+//#define YM 8//7   // can be a digital pin
+//#define XP 9//6   // can be a digital pin
+//TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+
 int touchx,touchy,touchx0,touchy0,ntouch;         
 unsigned long lasttouch;
 #define MINPRESSURE 10
@@ -405,7 +411,7 @@ void setup() {
   Serial.begin(57600);  
   Serial.println(F("Start"));     
   pinMode(13, OUTPUT);
-  tft.reset();  
+  //tft.reset();  not working on ili9341
   //tft.begin(tft.readID()); 
   tft.begin(0x9341);
   tft.setRotation(3);  
@@ -640,10 +646,10 @@ void play() {
  while (i<cur_step) {
   if (steps[i].fig1!=0) movestep(i); 
   digitalWrite(13, HIGH);
-  TSPoint p = ts.getPoint();
-  digitalWrite(13, LOW);  
-  pinMode(XM, OUTPUT);
-  pinMode(YP, OUTPUT);    
+  TS_Point p = ts.getPoint();
+  //digitalWrite(13, LOW);  
+  //pinMode(XM, OUTPUT);
+  //pinMode(YP, OUTPUT);    
   int x=388-p.y/2.4; 
   int y=p.x/3.2-50;       
   if (p.z>MINPRESSURE&&p.z<MAXPRESSURE)     
@@ -663,12 +669,12 @@ void play() {
 }
 //********************************** 
 void gui() {   
-  digitalWrite(13, HIGH);
-  TSPoint p = ts.getPoint();
-  digitalWrite(13, LOW);  
+  //digitalWrite(13, HIGH);
+  TS_Point p = ts.getPoint();
+  //digitalWrite(13, LOW);  
   // if sharing pins, you'll need to fix the directions of the touchscreen pins  
-  pinMode(XM, OUTPUT);
-  pinMode(YP, OUTPUT);    
+  //pinMode(XM, OUTPUT);
+  //pinMode(YP, OUTPUT);    
   int x=388-p.y/2.4; 
   int y=p.x/3.2-50;       
   if (((abs(x-touchx)>5||abs(y-touchy)>5)||drag)&&p.z>MINPRESSURE&&p.z<MAXPRESSURE) {    
@@ -854,8 +860,9 @@ void gui() {
           if (rotate) { x1=7-x1; y1=7-y1; }       
           if (abs(pole[x1][y1])>0&&(cur_step%2==1&&pole[x1][y1]>0||cur_step%2==0&&pole[x1][y1]<0)) {
           for (int i=0;i<16;i++)
-            for (int j=0;j<16;j++) buf[i*16+j]=tft.readPixel(touchx-8+i,touchy-8+j);
-          buf[0]=tft.readPixel(touchx-8,touchy-8);  
+         //   for (int j=0;j<16;j++) buf[i*16+j]=if (ts.touched()) (touchx-8+i,touchy-8+j);
+           //for (int j=0;j<16;j++) buf[i*16+j]=tft.readPixel(touchx-8+i,touchy-8+j);
+//          buf[0]=(ts.touched())(touchx-8,touchy-8);  
           uint16_t color,color_cont;    
           color=BLACK; color_cont=GRAY;
           if (pole[x1][y1]>0) { color=WHITE; color_cont=BLACK; }             
