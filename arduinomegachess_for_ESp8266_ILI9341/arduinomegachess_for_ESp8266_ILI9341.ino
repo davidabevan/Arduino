@@ -398,8 +398,8 @@ void setup() {
   uint32_t tim=millis();
   while (millis()-tim<1500) { 
 //     M5.update();
-  //  if (M5_BtnA.wasPressed()||M5_BtnB.wasPressed()||M5_BtnC.wasPressed()) {////toooooooooooooooooodoooooooooooooooooooooo
-      if(digitalRead(M5_BtnA)==LOW)
+   if (M5_BtnA.wasPressed()||M5_BtnB.wasPressed()||M5_BtnC.wasPressed()) {////toooooooooooooooooodoooooooooooooooooooooo
+    //  if(digitalRead(M5_BtnA)==LOW)
   //if(digitalRead(M5_BtnB)==0)
   //if(digitalRead(M5_BtnC)==0)
       beep(100);
