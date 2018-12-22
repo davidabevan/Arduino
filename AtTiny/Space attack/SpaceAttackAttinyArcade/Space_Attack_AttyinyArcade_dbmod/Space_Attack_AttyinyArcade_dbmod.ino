@@ -24,6 +24,7 @@
  * Sleep code is based on this blog post by Matthew Little:
  * http://www.re-innovation.co.uk/web12/index.php/en/blog-75/306-sleep-modes-on-attiny85
  * looks good DB sda/2 scl/3
+ * Buttons yellow pin5 green pin 6 new fire switch purple pin 7
 */
 #include <EEPROM.h>
 #include "font6x8AJ.h"
