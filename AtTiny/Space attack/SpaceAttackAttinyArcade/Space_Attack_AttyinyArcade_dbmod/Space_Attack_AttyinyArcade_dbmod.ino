@@ -23,6 +23,7 @@
  * 
  * Sleep code is based on this blog post by Matthew Little:
  * http://www.re-innovation.co.uk/web12/index.php/en/blog-75/306-sleep-modes-on-attiny85
+ * looks good DB sda/2 scl/3
 */
 #include <EEPROM.h>
 #include "font6x8AJ.h"
@@ -35,7 +36,7 @@
 // Routines to set and clear bits (used in the sleep code)
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-
+// speaker pin 6 disabled for use of switch on pb6 to fire so as to use my pocketetris switches
 // Defines for OLED output
 #define SSD1306XLED_H
 #define SSD1306_SCL   PORTB4  // SCL, Pin 4 on SSD1306 Board - for webbogles board
@@ -101,11 +102,11 @@ int score = 0; // score - this affects the difficulty of the game
 int top = 0;
 
 // Interrupt handlers
-ISR(PCINT0_vect){ // PB0 pin button interrupt           
+ISR(PCINT0_vect){ // PB0 pin button interrupt pin5     left     
    if (digitalRead(2)==1) fire = 1;
 }
 
-void playerIncSpaceAttack(){ // PB2 pin button interrupt
+void playerIncSpaceAttack(){ // PB2 pin button interrupt pin 7right
   if (digitalRead(0)==1) fire = 1;
 }
 
@@ -184,7 +185,7 @@ void loop() {
         ssd1306_send_data_start();
         sendBlock(0);
         ssd1306_send_data_stop();
-        beep(30,100);
+        //beep(30,100);
       }
       ssd1306_setpos(mm,0);      
       ssd1306_send_data_start();
@@ -221,7 +222,7 @@ void loop() {
       doNumber(88, 7, top);
     }
     for (int i = 0; i<1000; i = i+ 50){
-      beep(50,i);
+    //  beep(50,i);
     }
     delay(2000);
     if (newHigh) {
@@ -231,7 +232,7 @@ void loop() {
       ssd1306_char_f6x8(10, 7, "----------------");
       doNumber(50,5,top);
       for (int i = 700; i>200; i = i - 50){
-      beep(30,i);
+     // beep(30,i);
       }
       newHigh = 0;
       delay(2700);    
@@ -396,10 +397,10 @@ void system_sleep() {
   ssd1306_send_command(0xAF);
 }
 
-void beep(int bCount,int bDelay){
-  if (mute) return;
-  for (int i = 0; i<=bCount; i++){digitalWrite(1,HIGH);for(int i2=0; i2<bDelay; i2++){__asm__("nop\n\t");}digitalWrite(1,LOW);for(int i2=0; i2<bDelay; i2++){__asm__("nop\n\t");}}
-}
+//void beep(int bCount,int bDelay){
+  //if (mute) return;
+  //for (int i = 0; i<=bCount; i++){digitalWrite(1,HIGH);for(int i2=0; i2<bDelay; i2++){__asm__("nop\n\t");}digitalWrite(1,LOW);for(int i2=0; i2<bDelay; i2++){__asm__("nop\n\t");}}
+//}
 
 
 
@@ -421,7 +422,7 @@ void playSpaceAttack() {
 
   levelUp(1); // This also does various essential initialisations
   
-  attachInterrupt(0,playerIncSpaceAttack,CHANGE);
+  attachInterrupt(0,playerIncSpaceAttack,CHANGE);//was 0
 
   while (stopAnimate == 0) {
     while(1) {
@@ -430,16 +431,16 @@ void playSpaceAttack() {
     mothercounter++;
     
     // deal with inputs
-    if(analogRead(0) < 940) fire =1; // this reads the reset pin (pin 1) of the Attiny85 - to use it, see comments section above
-
-    if(digitalRead(2)==1) {
+    //if(analogRead(0) < 940) fire =1; // this reads the reset pin (pin 1) of the Attiny85 - to use it, see comments section above
+if(digitalRead(1)==1) fire = 1;                // fire new code for a fire switch on pin 6 DB
+    if(digitalRead(2)==1) {                     //left
       if (digitalRead(0)==1) fire = 1;
       if(player < 127-platformWidth) {
         player++;
         } 
     }
-    if (digitalRead(0)==1){
-      if (digitalRead(2)==1) fire = 1;
+    if (digitalRead(0)==1){                     //right
+      //if (digitalRead(2)==1) fire = 1;
       if (player >1){
         player--;
         } 
@@ -584,10 +585,10 @@ void playSpaceAttack() {
             score += 300;
           }
             
-          beep(30,400);
-          beep(30,300);          
-          beep(30,200);
-          beep(30,100);
+        //  beep(30,400);
+        //  beep(30,300);          
+        //  beep(30,200);
+        //  beep(30,100);
           mothership = 0;
           ssd1306_setpos(mothershipX,0);
           ssd1306_send_data_start();
@@ -616,7 +617,7 @@ void playSpaceAttack() {
             ssd1306_send_data_start();
             ssd1306_send_byte(temp);  
             ssd1306_send_data_stop();                                                          
-            beep(30,100);
+           // beep(30,100);
             
             fire = 0;
             playerFire[0] = 0;
@@ -778,7 +779,7 @@ void levelUp(int number) {
   ssd1306_char_f6x8(16, 5, "--------------");
   doNumber(85,4,number);
   for (int i = 800; i>200; i = i - 200){
-  beep(30,i);
+ // beep(30,i);
   }
   delay(700);    
   ssd1306_fillscreen(0x00);

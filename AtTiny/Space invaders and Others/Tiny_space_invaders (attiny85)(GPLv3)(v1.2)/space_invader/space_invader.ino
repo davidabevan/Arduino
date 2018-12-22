@@ -15,7 +15,7 @@
 
 //  You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+// buttons need ddifferent pins as does screen    db
 //the code work at 16MHZ internal
 //and use ssd1306xled Library for SSD1306 oled display 128x64
 #include <ssd1306xled.h>
