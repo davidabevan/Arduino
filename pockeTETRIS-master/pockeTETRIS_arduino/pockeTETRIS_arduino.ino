@@ -1,5 +1,5 @@
-#include <EEPROMex.h>
-#include <EEPROMVar.h>
+//#include <EEPROMex.h>
+//#include <EEPROMVar.h>
 
 /* 2015 / 2016 /2017
 
