@@ -1,0 +1,25 @@
+Calibration of the Display
+
+We will use the "touchscreendemo" example that comes with the library for calibration
+
+File -> Examples -> TouchScreen -> touchscreendemo
+
+Upload the example code to the Arduino
+
+Then open the serial monitor
+
+Click on the top left corner of the display and get the X and Y values
+
+Then enter these values at these variables on the shared source code
+
+X value = TS_MAXX 1023  79
+
+Y value = TS_MAXY   548
+
+Click on the bottom right corner of the display and enter the values in the
+ TS_MINX 1023
+and 
+TS_MINY 535
+variables
+
+The 1display calibrated for shared source code and its ready to use

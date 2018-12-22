@@ -1,12 +1,15 @@
-#include <Adafruit_ILI9341.h>
+
+
+
 
    //////////////////////////////////////////////
   //     2.8" TOUCH SCREEN TIC TAC TOE        //
  //                                          //
 //           http://www.educ8s.tv           //
 /////////////////////////////////////////////
- 
+// Adapted for ILI9325########DB December 21 2018 
 #include <Adafruit_TFTLCD.h>
+//#include <Adafruit_ILI9341.h>
 #include <Adafruit_GFX.h>    
 #include <TouchScreen.h>
 
@@ -21,10 +24,10 @@
 #define TS_MAXX 948
 #define TS_MAXY 910
 
-#define YP A2  // must be an analog pin, use "An" notation!
-#define XM A3  // must be an analog pin, use "An" notation!
-#define YM 8   // can be a digital pin
-#define XP 9   // can be a digital pin
+#define YP A1  // must be an analog pin, use "An" notation! A2
+#define XM A2  // must be an analog pin, use "An" notation! A3
+#define YM 7   // can be a digital pin 8
+#define XP 6   // can be a digital pin 9
 
 #define BLACK   0x0000
 #define BLUE    0x001F
@@ -55,7 +58,9 @@ void setup() {
   Serial.print("Starting...");
   randomSeed(analogRead(0));
  
-  initDisplay();
+  initDisplay();// see line150
+  //tft.begin(0x9325);
+  //tft.setRotation(1);
   drawStartScreen();
 }
 
@@ -70,8 +75,12 @@ void loop()
   
   if (p.z > ts.pressureThreshhold) {
 
-   p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
-   p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
+p.y = map(p.y, TS_MAXX, TS_MINX, 0, 240);
+
+   p.x = map(p.x, TS_MAXY, TS_MINY, 0, 240);//me
+//inversion DB
+//px = map(p.y, TS_MINX, TS_MAXX, 0, 320());
+//py = map(p.x, TS_MINY, TS_MAXY, 240(), 0);
 
    Serial.print("X = "); Serial.print(p.x);
    Serial.print("\tY = "); Serial.print(p.y);
@@ -145,8 +154,8 @@ void createStartButton()
 void initDisplay()
 {
   tft.reset();
-  tft.begin(0x9341);
-  tft.setRotation(1);
+  tft.begin(0x9325);
+  tft.setRotation(5);
 }
 
 void drawGameScreen()

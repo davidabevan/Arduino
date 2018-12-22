@@ -1,12 +1,10 @@
-#include <Adafruit_ILI9341.h>
-
    //////////////////////////////////////////////
   //     2.8" TOUCH SCREEN TIC TAC TOE        //
  //                                          //
 //           http://www.educ8s.tv           //
 /////////////////////////////////////////////
- 
-#include <Adafruit_TFTLCD.h>
+
+#include <Adafruit_TFTLCD.h> 
 #include <Adafruit_GFX.h>    
 #include <TouchScreen.h>
 
@@ -145,7 +143,7 @@ void createStartButton()
 void initDisplay()
 {
   tft.reset();
-  tft.begin(0x9341);
+  tft.begin(0x9325);
   tft.setRotation(1);
 }
 
@@ -296,10 +294,8 @@ void playerMove()
     p = ts.getPoint();  //Get touch point  
     if (p.z > ts.pressureThreshhold)
     {
-      //p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
-      //p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
-        p.x = map(p.x, TS_MAXX, TS_MINX, 320, 0);
-        p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
+      p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
+      p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
       Serial.println(p.x);
       Serial.println(p.y);
   
