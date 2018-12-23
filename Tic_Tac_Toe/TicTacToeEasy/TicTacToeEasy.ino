@@ -5,7 +5,7 @@
  //                                          //
 //           http://www.educ8s.tv           //
 /////////////////////////////////////////////
- 
+// For the 1st shield older 1 all works DB December 23 2018 
 #include <Adafruit_TFTLCD.h>
 #include <Adafruit_GFX.h>    
 #include <TouchScreen.h>

@@ -4,11 +4,11 @@
 
 #include <stdint.h>
 #include "TouchScreen.h"
-// Mods for mcufriend board db
-#define YP A1  //A2 must be an analog pin, use "An" notation!
-#define XM A2  //A3  must be an analog pin, use "An" notation!
-#define YM 7   //8 can be a digital pin
-#define XP 6   //9  can be a digital pin
+
+#define YP A1  // must be an analog pin, use "An" notation!
+#define XM A2  // must be an analog pin, use "An" notation!
+#define YM 7   // can be a digital pin
+#define XP 6   // can be a digital pin
 
 // For better pressure precision, we need to know the resistance
 // between X+ and X- Use any multimeter to read it

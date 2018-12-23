@@ -23,6 +23,11 @@
 #define TS_MINY 195
 #define TS_MAXX 948
 #define TS_MAXY 910
+// db calibrations
+//#define TS_MINX 325
+//#define TS_MINY 985
+//#define TS_MAXX 593
+//#define TS_MAXY 774
 
 #define YP A1  // must be an analog pin, use "An" notation! A2
 #define XM A2  // must be an analog pin, use "An" notation! A3
@@ -60,7 +65,7 @@ void setup() {
  
   initDisplay();// see line150
   //tft.begin(0x9325);
-  //tft.setRotation(1);
+  tft.setRotation(1);
   drawStartScreen();
 }
 
@@ -74,14 +79,17 @@ void loop()
    }
   
   if (p.z > ts.pressureThreshhold) {
+ p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
+   p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
 
-p.y = map(p.y, TS_MAXX, TS_MINX, 0, 240);
-
-   p.x = map(p.x, TS_MAXY, TS_MINY, 0, 240);//me
-//inversion DB
-//px = map(p.y, TS_MINX, TS_MAXX, 0, 320());
-//py = map(p.x, TS_MINY, TS_MAXY, 240(), 0);
-
+//inversion DB //tft.setRotation
+//#if  tft.setRotation == 1
+   // p.x = map(p.y, TS_MINY, TS_MAXY, 0, 320); // rotate & scale to TFT boundaries
+   // p.y = map(p.x, TS_MINX, TS_MAXX, 240, 0);    //   ... USB port at upper left
+//#elif  tft.setRotation == 3
+  // p.x = map(p.y, TS_MINY, TS_MAXY, 320, 0); // rotate & scale to TFT boundaries
+  // p.y = map(p.x, TS_MINX, TS_MAXX, 0, 240);    //   ... USB port at lower right
+//#endif
    Serial.print("X = "); Serial.print(p.x);
    Serial.print("\tY = "); Serial.print(p.y);
    Serial.print("\n");
