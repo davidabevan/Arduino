@@ -324,7 +324,7 @@ void setup() {
  // M5.Lcd.setRotation(5);
   prefs.begin("AM_Chess", false);  
             
-  M5.Lcd.setBrightness(200);    // BRIGHTNESS = MAX 255
+  M5.Lcd.setBrightness(240);    // BRIGHTNESS = MAX 255
   M5.Lcd.fillScreen(BLACK);     // CLEAR SCREEN
   M5.Lcd.setRotation(4);        // SCREEN ROTATION = 0  
   definecolors();
