@@ -84,13 +84,13 @@ void loop()
    }
   
   if (p.z > ts.pressureThreshhold) {
- p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
-   p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
+// p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
+  // p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
 
 //inversion DB //tft.setRotation
 //#if  tft.setRotation == 1
-   // p.x = map(p.y, TS_MINY, TS_MAXY, 0, 320); // rotate & scale to TFT boundaries
-   // p.y = map(p.x, TS_MINX, TS_MAXX, 240, 0);    //   ... USB port at upper left
+    p.x = map(p.y, TS_MINY, TS_MAXY, 0, 320); // rotate & scale to TFT boundaries
+    p.y = map(p.x, TS_MINX, TS_MAXX, 240, 0);    //   ... USB port at upper left
 //#elif  tft.setRotation == 3
   // p.x = map(p.y, TS_MINY, TS_MAXY, 320, 0); // rotate & scale to TFT boundaries
   // p.y = map(p.x, TS_MINX, TS_MAXX, 0, 240);    //   ... USB port at lower right
@@ -99,8 +99,12 @@ void loop()
    Serial.print("\tY = "); Serial.print(p.y);
    Serial.print("\n");
        
-   if(p.x>60 && p.x<260 && p.y>180 && p.y<220 && buttonEnabled)// The user has pressed inside the red rectangle
+ //  if(p.x>60 && p.x<260 && p.y>180 && p.y<220 && buttonEnabled)// The user has pressed inside the red rectangle
+ //mod
+if(p.x>60 && p.x<260 && p.y>180 && p.y<260 && buttonEnabled)// The user has pressed inside the red rectangl
+   
    {
+    
     buttonEnabled = false; //Disable button
     Serial.println("Button Pressed");
     resetGame();  
