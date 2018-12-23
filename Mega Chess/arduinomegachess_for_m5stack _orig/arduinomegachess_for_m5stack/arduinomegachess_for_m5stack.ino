@@ -2,16 +2,6 @@
 //engine 1.4 
 //Sergey Urusov, ususovsv@gmail.com
 
-  // 3 goes to TFT CS
-  // 4 goes to TFT DC
-  // 5 goes to TFT MOSI
-  // 6 goes to TFT SCK/CLK
-  // ESP RST to TFT RESET
-                  // Not connected
-//       3.3V     // Goes to TFT LED  
-//       5v       // Goes to TFT Vcc
-//       Gnd      // Goes to TFT Gnd  
-
 #include <M5Stack.h> 
 #include <Preferences.h>
 
