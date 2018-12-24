@@ -1,0 +1,21 @@
+if (rotation == 0){
+ x = map(p.x, 240, 0, 0, 240);
+ y = map(p.y, 320, 0, 0, 320);
+}
+ 
+if (rotation == 1){
+// p.x, p.y reversed //  
+ x = map(p.y, 320, 0, 0, 320);
+ y = map(p.x, 0, 240, 0, 240);
+}
+ 
+if (rotation == 2){ // especially this here, this deserves a slap in the face.
+ x = map(p.x, 0, 240, 0, 240);
+ y = map(p.y, 0, 320, 0, 320);  
+}
+ 
+ if (rotation == 3){
+//  p.x, p.y reversed //
+ x = map(p.y, 0, 320, 0, 320);
+ y = map(p.x, 240, 0, 0, 240);
+}

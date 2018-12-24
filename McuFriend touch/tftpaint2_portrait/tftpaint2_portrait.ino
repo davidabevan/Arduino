@@ -129,7 +129,7 @@ if(identifier == 0x9325) {
 
   tft.fillScreen(BLACK);
   tft.fillRect(0, 0, 320, 240, BLACK);
-  tft.setRotation(3);
+  tft.setRotation(0);//3
   tft.setCursor(30, 100);
   tft.setTextColor(RED);  tft.setTextSize(3);
   tft.println("LCD driver chip: ");
@@ -140,7 +140,7 @@ if(identifier == 0x9325) {
 delay(2000);
 tft.fillRect(0, 0, 320, 240, BLACK);
 
-tft.setRotation(0);
+tft.setRotation(3);//0
   tft.fillRect(0, 0, BOXSIZE, BOXSIZE, RED);
   tft.fillRect(0, BOXSIZE, BOXSIZE, BOXSIZE, YELLOW);
   tft.fillRect(0, BOXSIZE*2, BOXSIZE, BOXSIZE, GREEN);
@@ -189,8 +189,13 @@ void loop()
 #endif // DEBUG
 if (p.y < (TS_MINY-5)) stergere();
     // scale from 0->1023 to tft.width
-    p.x = tft.width()-(map(p.x, TS_MINX, TS_MAXX, tft.width(), 0));
-    p.y = tft.height()-(map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
+   // p.x = tft.width()-(map(p.x, TS_MINX, TS_MAXX, tft.width(), 0));
+    //p.y = tft.height()-(map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
+   // p.x = tft.width()-(map(p.x, TS_MINX, TS_MAXX, tft.width(), 0));
+   // p.y = tft.height()-(map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
+p.x = map(p.x, TS_MINX, TS_MAXX, 0, 320);
+  p.y = map(p.y, TS_MINY, TS_MAXY, 240, 0);
+    
 #ifdef DEBUG
     Serial.print("("); Serial.print(p.x);
     Serial.print(", "); Serial.print(p.y);

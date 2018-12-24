@@ -4,10 +4,10 @@
 //#include <SPFD5408_Adafruit_GFX.h>    // Core graphics library
 //#include <SPFD5408_Adafruit_TFTLCD.h> // Hardware-specific library
 //#include <SPFD5408_TouchScreen.h>
-//#include <MCUFRIEND_kbv.h>
-//MCUFRIEND_kbv tft;
+#include <MCUFRIEND_kbv.h>
+
 #include <Adafruit_GFX.h>
-#include <Adafruit_TFTLCD.h> // Hardware-specific library
+//#include <Adafruit_TFTLCD.h> // Hardware-specific library
 
 #include <TouchScreen.h>
 
@@ -39,15 +39,18 @@
 /*_______Assigned______*/
 
 /*____Calibrate TFT LCD_____*/
-#define TS_MINX 226//125
-#define TS_MINY 198//85
-#define TS_MAXX 878//965
-#define TS_MAXY 913//905
+//#define TS_MINX 224//125
+//#define TS_MINY 201//85
+//#define TS_MAXX 878//965
+//#define TS_MAXY 918//905
 /*______End of Calibration______*/
-
+uint8_t Orientation = 0;    //0=PORTRAIT 1=LANDSCAPE
+ uint16_t xpos, ypos;  //screen coordinates
+ const int TS_LEFT=202,TS_RT=892,TS_TOP=160,TS_BOT=911;
+ uint16_t ID, oldcolor, currentcolor;
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300); //300 is the sensitivity
-Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET); //Start communication with LCD
-
+//Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET); //Start communication with LCD
+MCUFRIEND_kbv tft;
 String symbol[4][4] = {
   { "7", "8", "9", "/" },
   { "4", "5", "6", "*" },
@@ -64,8 +67,11 @@ String symbol[4][4] = {
 void setup() {
   Serial.begin(9600); //Use serial monitor for debugging
   tft.reset(); //Always reset at start
-  tft.begin(); // My LCD uses LIL9341 Interface driver IC
-  tft.setRotation(0); // I just roated so that the power jack faces up - optional
+  ID = tft.readID();
+    tft.begin(ID);
+ // tft.begin(); // My LCD uses LIL9341 Interface driver IC
+  //tft.setRotation(0); // I just roated so that the power jack faces up - optional
+  tft.setRotation(Orientation);
   tft.fillScreen(WHITE);
 
   IntroScreen();
@@ -74,10 +80,12 @@ void setup() {
 }
 
 void loop() {
+   uint16_t xpos, ypos;  //screen coordinates
+//    tp = ts.getPoint();   //tp.x, tp.y are ADC values
 TSPoint p = waitTouch();
 X = p.y; Y = p.x;
-//  Serial.print(X); Serial.print(','); Serial.println(Y);// + " " + Y);
-
+ Serial.print(X); Serial.print(','); Serial.println(Y);// + " " + Y);
+Serial.print(xpos); Serial.print(','); Serial.println(ypos);// + " " + Y);
 DetectButtons();
 
 if (result==true)
@@ -89,23 +97,55 @@ DisplayResult();
 }
 
 TSPoint waitTouch() {
-  TSPoint p;
+ // TSPoint p;
+ TSPoint tp;
   do {
-    p = ts.getPoint(); 
+    tp = ts.getPoint(); 
     pinMode(XM, OUTPUT);
     pinMode(YP, OUTPUT);
-  } while((p.z < MINPRESSURE )|| (p.z > MAXPRESSURE));
-  p.x = map(p.x, TS_MINX, TS_MAXX, 0, 320);
-  p.y = map(p.y, TS_MINY, TS_MAXY, 240, 0);
-  return p;
+  } while((tp.z < MINPRESSURE )|| (tp.z > MAXPRESSURE));
+
+  switch (Orientation) {
+            case 0:
+                xpos = map(tp.x, TS_LEFT, TS_RT, 0, tft.width());
+                ypos = map(tp.y, TS_TOP, TS_BOT, 0, tft.height());
+                break;
+            case 1:
+                xpos = map(tp.y, TS_TOP, TS_BOT, 0, tft.width());
+                ypos = map(tp.x, TS_RT, TS_LEFT, 0, tft.height());
+                break;
+            case 2:
+                xpos = map(tp.x, TS_RT, TS_LEFT, 0, tft.width());
+                ypos = map(tp.y, TS_BOT, TS_TOP, 0, tft.height());
+                break;
+            case 3:
+                xpos = map(tp.y, TS_BOT, TS_TOP, 0, tft.width());
+                ypos = map(tp.y, TS_LEFT, TS_RT, 0, tft.height());
+                break;
+        }
+
+  //p.x = map(p.x, TS_MINX, TS_MAXX, 0, 240);
+  //p.y = map(p.y, TS_MINY, TS_MAXY, 0,320);
+ 
+    // p.x = tft.width()-(map(p.x, TS_MINX, TS_MAXX, 320, 0));//no
+   // p.y = tft.height()-(map(p.y, TS_MINY, TS_MAXY, 240, 0));
+   
+   // p.y = map(p.y, TS_MINY, TS_MAXY, 0, 240);//no
+   // p.x = map(p.x, TS_MINX, TS_MAXX, 0, 320);
+ 
+// p.y = map(p.x, TS_MINY, TS_MAXY, 240, 0);
+ // p.x = map(p.y, TS_MINX, TS_MAXX, 0, 320);//no
+
+ return tp;
+ 
 }
 
 void DetectButtons()
 {
   
-  if (X<50 && X>0) //Detecting Buttons on Column 1
+  if (X<855 && X>857) //Detecting Buttons on Column 1
   {
-    if (Y>0 && Y<85) //If cancel Button is pressed
+    if (Y>362 && Y<230) //If cancel Button is pressed
     {Serial.println ("Button Cancel"); Number=Num1=Num2=0; result=false;}
     
      if (Y>85 && Y<140) //If Button 1 is pressed

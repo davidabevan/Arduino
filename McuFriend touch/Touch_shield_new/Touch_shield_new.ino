@@ -21,7 +21,7 @@ TSPoint tp;
 int16_t BOXSIZE;
 int16_t PENRADIUS = 1;
 uint16_t ID, oldcolor, currentcolor;
-uint8_t Orientation = 0;    //PORTRAIT
+uint8_t Orientation = 0;    //0=PORTRAIT 1=LANDSCAPE
 
 // Assign human-readable names to some common 16-bit color values:
 #define BLACK   0x0000

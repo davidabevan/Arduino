@@ -58,6 +58,7 @@ void setup(void) {
   //uint16_t identifier = 0x9341;
  
   tft.begin();
+  tft.setRotation(0);
   pinMode(13, OUTPUT);
   tft.fillScreen(BLACK);
  
