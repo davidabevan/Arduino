@@ -20,9 +20,9 @@
 #define BUTTON_A 0
 #define BUTTON_B 1
 #define BUTTON_C 2
-#define BUTTON_A_PIN 39
-#define BUTTON_B_PIN 38
-#define BUTTON_C_PIN 37
+#define BUTTON_A_PIN 36//39
+#define BUTTON_B_PIN 39//38
+#define BUTTON_C_PIN 34//37
 
 // BEEP PIN
 #define SPEAKER_PIN 25
