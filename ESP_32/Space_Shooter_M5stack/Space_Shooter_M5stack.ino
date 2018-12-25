@@ -96,9 +96,9 @@ void setup() {
   M5.Lcd.setTextColor(0x5E85);
   M5.Lcd.setTextSize(4);
   randomSeed(analogRead(6));
-  pinMode(BUTTON_A_PIN, INPUT);
-  pinMode(BUTTON_B_PIN, INPUT);
-  pinMode(BUTTON_C_PIN, INPUT);
+  pinMode(BUTTON_A_PIN, INPUT_PULLUP);
+  pinMode(BUTTON_B_PIN, INPUT_PULLUP);
+  pinMode(BUTTON_C_PIN, INPUT_PULLUP);
 }
 //==================================================================
 void loop() {
