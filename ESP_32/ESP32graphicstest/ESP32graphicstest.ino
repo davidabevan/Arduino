@@ -19,9 +19,15 @@
 #include "Adafruit_ILI9341.h"
 
 // For the Adafruit shield, these are the default.
-#define TFT_DC 27//4
-#define TFT_CS 14//15
-#define TFT_RST 33//2
+//#define TFT_DC 27//4
+//#define TFT_CS 14//15
+//#define TFT_RST 33//2
+//#define TFT_MISO 19//19         
+//#define TFT_MOSI 23//23           
+//#define TFT_CLK 18//18 
+#define TFT_DC 4
+#define TFT_CS 15
+#define TFT_RST 2
 #define TFT_MISO 19//19         
 #define TFT_MOSI 23//23           
 #define TFT_CLK 18//18 
