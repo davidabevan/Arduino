@@ -125,11 +125,11 @@ void setup() {
 
   randomSeed(analogRead(6));
   
-  touchAttachInterrupt(27, left, threshold);  //Touch input
-  touchAttachInterrupt(12, right, threshold);
-  touchAttachInterrupt(13, down, threshold);
-  touchAttachInterrupt(14, up, threshold);
-  touchAttachInterrupt(15, select, threshold);
+ // touchAttachInterrupt(27, left, threshold);  //Touch input
+ // touchAttachInterrupt(12, right, threshold);
+ // touchAttachInterrupt(13, down, threshold);
+ // touchAttachInterrupt(14, up, threshold);
+ // touchAttachInterrupt(15, select, threshold);
 }
 
 void loop() {
