@@ -34,7 +34,7 @@
 // For the Arduino Mega, use digital pins 22 through 29
 // (on the 2-row header at the end of the board).
 
-//#define DEBUG
+#define DEBUG
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_TFTLCD.h> // Hardware-specific library
 #include <TouchScreen.h>
