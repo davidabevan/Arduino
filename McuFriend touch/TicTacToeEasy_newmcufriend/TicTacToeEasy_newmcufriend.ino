@@ -19,15 +19,13 @@
 #define LCD_RD A0 
 #define LCD_RESET A4 
 
-#define TS_MINX 948//204
-#define TS_MINY 195
-#define TS_MAXX 204//948
-#define TS_MAXY 910
+//#define TS_MINX 196//204
+//#define TS_MINY 161//195
+//#define TS_MAXX 890//948
+//#define TS_MAXY 908//910
 // db calibrations
-//#define TS_MINX 325
-//#define TS_MINY 985
-//#define TS_MAXX 593
-//#define TS_MAXY 774
+//const int TS_LEFT=201,TS_RT=899,TS_TOP=157,TS_BOT=900;//portrait
+const int TS_LEFT=157,TS_RT=900,TS_TOP=899,TS_BOT=201;//Landscape
 // Mine this board differs for some reason
 #define YP A1  // must be an analog pin, use "An" notation! A2
 #define XM A2  // must be an analog pin, use "An" notation! A3
@@ -69,6 +67,7 @@ void setup() {
   randomSeed(analogRead(0));
  
   initDisplay();// see line150
+//  show_tft();
   //tft.begin(0x9325);
   //tft.setRotation(1);
   drawStartScreen();
@@ -84,24 +83,35 @@ void loop()
    }
   
   if (p.z > ts.pressureThreshhold) {
-// p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
-  // p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
+//     p.x = tft.width()-(map(p.x, TS_MINX, TS_MAXX, tft.width(), 0));
+  //  p.y = tft.height()-(map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
+ //p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
+   //p.y = map(p.y, TS_MINY, TS_MAXY, 0, 240);
+   //case 0;
+  //p.x = map(p.x, TS_RT, TS_LEFT, 0, tft.width());
+  //p.y = map(p.y, TS_TOP, TS_BOT, tft.height(), 0 );
+ 
 
-//inversion DB //tft.setRotation
-//#if  tft.setRotation == 1
-    p.x = map(p.y, TS_MINY, TS_MAXY, 0, 320); // rotate & scale to TFT boundaries
-    p.y = map(p.x, TS_MINX, TS_MAXX, 240, 0);    //   ... USB port at upper left
-//#elif  tft.setRotation == 3
-  // p.x = map(p.y, TS_MINY, TS_MAXY, 320, 0); // rotate & scale to TFT boundaries
-  // p.y = map(p.x, TS_MINX, TS_MAXX, 0, 240);    //   ... USB port at lower right
-//#endif
+              //case 1:
+                //p.x = map(p.y, TS_TOP, TS_BOT, 0, 320);//
+               // p.y = map(p.y, TS_LEFT, TS_RT, 240, 0);
+                //break;
+           // case 2:
+                //p.y = map(p.x, TS_RT, TS_LEFT, 0, tft.width());
+                //p.x = map(p.y, TS_BOT, TS_TOP, 0, tft.height());
+               // break;
+           // case 3:
+                p.x= map(p.y, TS_BOT, TS_TOP, 0, tft.width());
+                p.y = map(p.x, TS_LEFT, TS_RT, 0, tft.height());
+               // break; 
+                           
    Serial.print("X = "); Serial.print(p.x);
    Serial.print("\tY = "); Serial.print(p.y);
    Serial.print("\n");
        
- //  if(p.x>60 && p.x<260 && p.y>180 && p.y<220 && buttonEnabled)// The user has pressed inside the red rectangle
+  // if(p.y>60 && p.y<260 && p.x>180 && p.x<260 && buttonEnabled)// The user has pressed inside the red rectangle
  //mod
-if(p.x>60 && p.x<260 && p.y>180 && p.y<260 && buttonEnabled)// The user has pressed inside the red rectangl
+if(p.x>60 && p.x<260 && p.y>55 && p.y<197 && buttonEnabled)// The user has pressed inside the red rectangl
    
    {
     
@@ -324,8 +334,22 @@ void playerMove()
     {
       //p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
       //p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
-        p.x = map(p.x, TS_MAXX, TS_MINX, 320, 0);
-        p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
+//        p.x = map(p.x, TS_MAXX, TS_MINX, 320, 0);
+  //      p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
+  //Case 0;//works portrait screen small
+ // p.x = map(p.x, TS_LEFT, TS_RT, 0, tft.width());
+  //p.y = map(p.y, TS_TOP, TS_BOT, 0, tft.height());
+  //caase 1;
+ // p.x = map(p.y, TS_TOP, TS_BOT, 0, tft.width());
+  //p.y = map(p.x, TS_RT, TS_LEFT, 0, tft.height());
+  //case 2;
+  //p.x = map(p.x, TS_RT, TS_LEFT, 0, tft.width());
+ // p.y = map(p.y, TS_BOT, TS_TOP, 0, tft.height());
+ // case 3:
+               // p.x = map(p.y, TS_BOT, TS_TOP, 0, tft.width());
+               // p.y = map(p.x, TS_LEFT, TS_RT, 0, tft.height());
+// p.x = map(p.x, TS_RT, TS_LEFT, 0, tft.width());
+  //p.y = map(p.y, TS_TOP, TS_BOT, tft.height(), 0 );              
       Serial.println(p.x);
       Serial.println(p.y);
   
