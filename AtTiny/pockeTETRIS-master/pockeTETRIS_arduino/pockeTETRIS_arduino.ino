@@ -4,7 +4,7 @@
 
     Dominick Anatala
     modified for 3 buttons, removed wrapping around edges since we now have 3 buttons
-        
+/////////////////////// 8mhz//////////       
 
    Tetris for Attiny Arcade
    ========================
