@@ -10,8 +10,8 @@ MCUFRIEND_kbv tft;       // hard-wired for UNO shields anyway.
 
 char *name = "Please Calibrate.";  //edit name of shield
 const int XP=6,XM=A2,YP=A1,YM=7; //ID=0x9341
-const int TS_LEFT=202,TS_RT=892,TS_TOP=160,TS_BOT=911;
-
+//const int TS_LEFT=202,TS_RT=892,TS_TOP=160,TS_BOT=911;//portrait 0
+const int TS_LEFT=161,TS_RT=907,TS_TOP=200,TS_BOT=893;// landscape 1/3
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 TSPoint tp;
 
@@ -21,7 +21,7 @@ TSPoint tp;
 int16_t BOXSIZE;
 int16_t PENRADIUS = 1;
 uint16_t ID, oldcolor, currentcolor;
-uint8_t Orientation = 0;    //0=PORTRAIT 1=LANDSCAPE
+uint8_t Orientation = 3;    //0=PORTRAIT 1=LANDSCAPE
 
 // Assign human-readable names to some common 16-bit color values:
 #define BLACK   0x0000
@@ -149,7 +149,7 @@ void loop()
                 break;
             case 3:
                 xpos = map(tp.y, TS_BOT, TS_TOP, 0, tft.width());
-                ypos = map(tp.y, TS_LEFT, TS_RT, 0, tft.height());
+                ypos = map(tp.x, TS_LEFT, TS_RT, 0, tft.height());//y
                 break;
         }
 

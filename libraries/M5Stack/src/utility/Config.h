@@ -2,7 +2,7 @@
 #define _CONFIG_H_
 
 // Screen
-// adjust to old defaults on ili9341
+// adjust to old defaults on ili9341 also see ln_eSPI_Setup.h
 #define TFT_LED_PIN   32
 #define TFT_DC_PIN     27//27//4
 #define TFT_CS_PIN    14//14//15
