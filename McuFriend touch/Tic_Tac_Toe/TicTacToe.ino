@@ -1,17 +1,10 @@
-
-
-
-
    //////////////////////////////////////////////
   //     2.8" TOUCH SCREEN TIC TAC TOE        //
  //                                          //
 //           http://www.educ8s.tv           //
 /////////////////////////////////////////////
-// Adapted for The MCU Friend ILI9325########DB December 21 2018 
-//#include <Adafruit_TFTLCD.h>
-//#include <Adafruit_ILI9341.h>
-#include <MCUFRIEND_kbv.h>
-MCUFRIEND_kbv tft;  
+
+#include <Adafruit_TFTLCD.h> 
 #include <Adafruit_GFX.h>    
 #include <TouchScreen.h>
 
@@ -20,28 +13,16 @@ MCUFRIEND_kbv tft;
 #define LCD_WR A1 
 #define LCD_RD A0 
 #define LCD_RESET A4 
-uint16_t ID, oldcolor, currentcolor;
-//#define TS_MINX 196//204
-//#define TS_MINY 161//195
-//#define TS_MAXX 890//948
-//#define TS_MAXY 908//910
-#define TS_LEFT 157
-#define TS_RT 899
-#define TS_TOP 200
-#define TS_BOT 900
-// db calibrations
-//const int TS_LEFT=201,TS_RT=899,TS_TOP=157,TS_BOT=900;//portrait
-//const int TS_LEFT=157,TS_RT=900,TS_TOP=200,TS_BOT=900;//Landscape
-// Mine this board differs for some reason
-#define YP A1  // must be an analog pin, use "An" notation! A2
-#define XM A2  // must be an analog pin, use "An" notation! A3
-#define YM 7   // can be a digital pin 8
-#define XP 6   // can be a digital pin 9
-// Original
-//#define YP A2  // must be an analog pin, use "An" notation!
-//#define XM A3  // must be an analog pin, use "An" notation!
-//#define YM 8   // can be a digital pin
-//#define XP 9   // can be a digital pin
+
+#define TS_MINX 204
+#define TS_MINY 195
+#define TS_MAXX 948
+#define TS_MAXY 910
+
+#define YP A2  // must be an analog pin, use "An" notation!
+#define XM A3  // must be an analog pin, use "An" notation!
+#define YM 8   // can be a digital pin
+#define XP 9   // can be a digital pin
 
 #define BLACK   0x0000
 #define BLUE    0x001F
@@ -54,8 +35,8 @@ uint16_t ID, oldcolor, currentcolor;
 
 extern uint8_t circle[];
 extern uint8_t x_bitmap[];
-//constructor for kbv not needed
-//Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
+
+Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
 int gameScreen = 1;
@@ -72,11 +53,7 @@ void setup() {
   Serial.print("Starting...");
   randomSeed(analogRead(0));
  
-//  initDisplay();// see line150
- tft.reset();
-    ID = tft.readID();
-    tft.begin(ID);
-    tft.setRotation(3);
+  initDisplay();
   drawStartScreen();
 }
 
@@ -90,23 +67,16 @@ void loop()
    }
   
   if (p.z > ts.pressureThreshhold) {
-//     p.x = tft.width()-(map(p.x, TS_MINX, TS_MAXX, tft.width(), 0));
-  //  p.y = tft.height()-(map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
- //p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
-   //p.y = map(p.y, TS_MINY, TS_MAXY, 0, 240);
-    p.y = map(p.x, TS_TOP, TS_BOT,  tft.height(),0);
-     p.x = map(p.x, TS_LEFT, TS_RT, 0, tft.height());//y
-                           
+
+   p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
+   p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
+
    Serial.print("X = "); Serial.print(p.x);
    Serial.print("\tY = "); Serial.print(p.y);
    Serial.print("\n");
        
-  // if(p.y>60 && p.y<260 && p.x>180 && p.x<260 && buttonEnabled)// The user has pressed inside the red rectangle
- //mod
-if(p.x>60 && p.x<260 && p.y>55 && p.y<197 && buttonEnabled)// The user has pressed inside the red rectangl
-   
+   if(p.x>60 && p.x<260 && p.y>180 && p.y<220 && buttonEnabled)// The user has pressed inside the red rectangle
    {
-    
     buttonEnabled = false; //Disable button
     Serial.println("Button Pressed");
     resetGame();  
@@ -170,12 +140,12 @@ void createStartButton()
   tft.print("Start Game");
 }
 
-//void initDisplay()
-//{
-  //tft.reset();
-  //tft.begin();
-  //tft.setRotation(3);
-//}
+void initDisplay()
+{
+  tft.reset();
+  tft.begin(0x9325);
+  tft.setRotation(1);
+}
 
 void drawGameScreen()
 {
@@ -324,8 +294,8 @@ void playerMove()
     p = ts.getPoint();  //Get touch point  
     if (p.z > ts.pressureThreshhold)
     {
-       //p.x = map(p.y, TS_BOT, TS_TOP, 0, tft.width());
-     //p.y = map(p.x, TS_LEFT, TS_RT, 0, tft.height());//y         
+      p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
+      p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
       Serial.println(p.x);
       Serial.println(p.y);
   
