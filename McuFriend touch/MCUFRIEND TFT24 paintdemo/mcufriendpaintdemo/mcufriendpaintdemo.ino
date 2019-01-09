@@ -33,11 +33,11 @@ uint8_t XM = A2;  // must be an analog pin, use "An" notation!
 uint8_t YM = 7;   // can be a digital pin
 uint8_t XP = 6;   // can be a digital pin
 uint8_t Landscape = 0;
-
-uint16_t TS_LEFT = 920;
-uint16_t TS_RT = 150;
-uint16_t TS_TOP = 940;
-uint16_t TS_BOT = 120;
+//mcufriend calib DB
+uint16_t TS_LEFT = 164;
+uint16_t TS_RT = 915;
+uint16_t TS_TOP = 157;
+uint16_t TS_BOT = 914;
 
 // For better pressure precision, we need to know the resistance
 // between X+ and X- Use any multimeter to read it

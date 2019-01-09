@@ -6,7 +6,7 @@ M5Display::M5Display() : TFT_eSPI() {}
 
 void M5Display::begin() {
   TFT_eSPI::begin();
-  setRotation(4);
+  setRotation(1);
   fillScreen(0);
 
   // Init the back-light LED PWM

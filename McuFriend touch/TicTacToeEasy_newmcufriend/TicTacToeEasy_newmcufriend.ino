@@ -25,10 +25,11 @@ uint16_t ID, oldcolor, currentcolor;
 //#define TS_MINY 161//195
 //#define TS_MAXX 890//948
 //#define TS_MAXY 908//910
-#define TS_LEFT 157
-#define TS_RT 899
-#define TS_TOP 200
-#define TS_BOT 900
+#define TS_LEFT 154
+#define TS_RT 914
+#define TS_TOP 915
+#define TS_BOT 164
+uint8_t Landscape = 3;
 // db calibrations
 //const int TS_LEFT=201,TS_RT=899,TS_TOP=157,TS_BOT=900;//portrait
 //const int TS_LEFT=157,TS_RT=900,TS_TOP=200,TS_BOT=900;//Landscape
@@ -90,13 +91,9 @@ void loop()
    }
   
   if (p.z > ts.pressureThreshhold) {
-//     p.x = tft.width()-(map(p.x, TS_MINX, TS_MAXX, tft.width(), 0));
-  //  p.y = tft.height()-(map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
- //p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);
-   //p.y = map(p.y, TS_MINY, TS_MAXY, 0, 240);
-    p.y = map(p.x, TS_TOP, TS_BOT,  tft.height(),0);
-     p.x = map(p.x, TS_LEFT, TS_RT, 0, tft.height());//y
-                           
+     p.x = map(p.x, TS_LEFT, TS_RT, 0, 320);
+        p.y = map(p.y, TS_TOP, TS_BOT, 0, 240);
+// Also see lines  324                          
    Serial.print("X = "); Serial.print(p.x);
    Serial.print("\tY = "); Serial.print(p.y);
    Serial.print("\n");
@@ -320,12 +317,20 @@ void playerMove()
   boolean validMove = false;
   Serial.print("\nPlayer Move:");
   do
-  {    
+  {  
+    int tmp;  
     p = ts.getPoint();  //Get touch point  
     if (p.z > ts.pressureThreshhold)
     {
+      if (Landscape) {   // swap X and Y
+            tmp = p.x;
+            p.x = p.y;
+            p.y = tmp;
+        }
        //p.x = map(p.y, TS_BOT, TS_TOP, 0, tft.width());
-     //p.y = map(p.x, TS_LEFT, TS_RT, 0, tft.height());//y         
+     //p.y = map(p.x, TS_LEFT, TS_RT, 0, tft.height());//y      
+       p.x = map(p.x, TS_LEFT, TS_RT, 0, 240);
+        p.y = map(p.y, TS_TOP, TS_BOT, 0, 320);   
       Serial.println(p.x);
       Serial.println(p.y);
   

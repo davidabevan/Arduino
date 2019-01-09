@@ -1,0 +1,33 @@
+TouchScreen.h GFX Calibration
+Making all control and bus pins INPUT_PULLUP
+Typical 30k Analog pullup with corresponding pin
+would read low when digital is written LOW
+e.g. reads ~25 for 300R X direction
+e.g. reads ~30 for 500R Y direction
+
+Testing : (A1, D7) = 30
+Testing : (A2, D6) = 27
+Diagnosing as:-
+YP,YM:  (A1, D7) = 30
+XM,XP:  (A2, D6) = 27
+ID = 0x9325
+
+cx=193 cy=183 cz=591 LEFT, TOP, Pressure
+cx=202 cy=539 cz=475 LEFT, MIDH, Pressure
+cx=195 cy=895 cz=277 LEFT, BOT, Pressure
+cx=528 cy=184 cz=627 MIDW, TOP, Pressure
+cx=545 cy=890 cz=378 MIDW, BOT, Pressure
+cx=892 cy=176 cz=666 RT, TOP, Pressure
+cx=879 cy=530 cz=617 RT, MIDH, Pressure
+cx=881 cy=889 cz=529 RT, BOT, Pressure
+MCUFRIEND_kbv ID=0x9325  240 x 320
+
+const int XP=6,XM=A2,YP=A1,YM=7; //240x320 ID=0x9325
+const int TS_LEFT=164,TS_RT=915,TS_TOP=157,TS_BOT=914;
+PORTRAIT CALIBRATION     240 x 320
+x = map(p.x, LEFT=164, RT=915, 0, 240)
+y = map(p.y, TOP=157, BOT=914, 0, 320)
+Touch Pin Wiring XP=6 XM=A2 YP=A1 YM=7
+LANDSCAPE CALIBRATION    320 x 240
+x = map(p.y, LEFT=157, RT=914, 0, 320)
+y = map(p.x, TOP=915, BOT=164, 0, 240)
