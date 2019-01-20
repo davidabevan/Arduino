@@ -33,6 +33,11 @@ uint8_t SpeedShootMonster=0;
 uint8_t ShipDead=0;
 uint8_t ShipPos=64;
 // fin var public
+// Defines for OLED output Added DB Jan 11 2019
+#define SSD1306XLED_H
+#define SSD1306_SCL   PORTB4  // SCL, Pin 4 on SSD1306 Board - for webbogles board
+#define SSD1306_SDA   PORTB3  // SDA, Pin 3 on SSD1306 Board - for webbogles board
+#define SSD1306_SA    0x78  // Slave address
 
 void setup() {
 SSD1306.ssd1306_init();
