@@ -22,10 +22,12 @@
 // -----(+)--------------->	// Vcc,	Pin 1 on SSD1306 Board
 // -----(-)--------------->	// GND,	Pin 2 on SSD1306 Board
 #ifndef SSD1306_SCL
-#define SSD1306_SCL		PB2	// SCL,	Pin 3 on SSD1306 Board
+//#define SSD1306_SCL		PB2	// SCL,	Pin 3 on SSD1306 Board
+  #define SSD1306_SCL       PB4 // For my PocketTetris PCB
 #endif
 #ifndef SSD1306_SDA
-#define SSD1306_SDA		PB0	// SDA,	Pin 4 on SSD1306 Board
+#define SSD1306_SDA		PB3	// SDA,	Pin 4 on SSD1306 Board
+
 #endif
 #ifndef SSD1306_SA
 #define SSD1306_SA		0x78	// Slave address
