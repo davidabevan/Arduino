@@ -24,6 +24,7 @@
  * Sleep code is based on this blog post by Matthew Little:
  * http://www.re-innovation.co.uk/web12/index.php/en/blog-75/306-sleep-modes-on-attiny85
 */
+// 8MHZ Internal Clock Speed DB"""""""
 #include <EEPROM.h>
 #include "font6x8AJ.h"
 #include <avr/sleep.h>
