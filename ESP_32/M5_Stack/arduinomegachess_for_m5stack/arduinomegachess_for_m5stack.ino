@@ -316,7 +316,7 @@ void setup() {
             
   M5.Lcd.setBrightness(255);    // BRIGHTNESS = MAX 255
   M5.Lcd.fillScreen(BLACK);     // CLEAR SCREEN
-  M5.Lcd.setRotation(4);        // SCREEN ROTATION = 0  
+  M5.Lcd.setRotation(1);        // SCREEN ROTATION = 0  
   definecolors();
   beep(100);      
   for (int i=0;i<MAXSTEPS;i++) {
