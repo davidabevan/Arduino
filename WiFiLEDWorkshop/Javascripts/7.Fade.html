@@ -1,0 +1,22 @@
+<script>
+	var xhr=new XMLHttpRequest();
+	function send_pixels(pixels) {
+		xhr.open('GET','http://192.168.4.1/cc?pixels='+pixels,true);
+		xhr.send();
+	}
+	function send_brightness(brightness) {
+		xhr.open('GET','http://192.168.4.1/cc?brightness='+brightness,true);
+		xhr.send();
+	}
+
+	var brightness=0;
+	var increment=10;
+	function fade() {
+		send_brightness(brightness);
+		if(brightness>=100) increment=-5;
+		if(brightness==0) increment=5;
+		brightness += increment;
+	}
+	//send_pixels('00ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff00');
+ 	setInterval(fade, 50);	// 50ms interval
+</script>

@@ -1,0 +1,63 @@
+<script>
+	var xhr=new XMLHttpRequest();
+	function send_frame(frame) {
+		xhr.open('GET','http://192.168.4.1/cc?pixels='+frame,true);
+		xhr.send();
+	}
+	function send_brightness(brightness) {
+		xhr.open('GET','http://192.168.4.1/cc?brightness='+brightness,true);
+		xhr.send();
+	}
+  function color2hex(c) {
+  	function hex(x) { return ('0' + parseInt(x).toString(16)).slice(-2); }
+ 		return '' + hex((c>>16)&0xFF) + hex((c>>8)&0xFF) + hex(c&0xFF);
+  }
+
+  function pixels2frame(pixels) {
+  	var comm='',r,c;
+  	for(r=0;r<7;r++) {
+  		for(c=0;c<5;c++) {
+  			comm+=color2hex(pixels[r][c]);
+  		}
+  	}
+  	return comm;
+  }
+
+	// 2D array storing pixel values
+	var pixels=[[0,0,0,0,0],
+							[0,0,0,0,0],
+							[0,0,0,0,0],
+							[0,0,0,0,0],
+							[0,0,0,0,0],
+							[0,0,0,0,0],
+							[0,0,0,0,0]];
+
+	var frame_index = 0;
+	function animate() {
+		// generate frames dynamically
+		var i, r, c;
+		for(r=0;r<7;r++)
+		for(c=0;c<5;c++)
+			pixels[r][c]=0;	// clear pixel buffer
+		if(frame_index==3) {
+			// do nothing for the last frame
+		} else {
+			var start=frame_index;
+			var color=0x008000;
+			for(i=start;i<5-start;i++) {
+				pixels[start][i]=color;	// top edge
+				pixels[6-start][i]=color;	// bottom edge
+			}
+			for(i=start;i<7-start;i++) {
+				pixels[i][start]=color;	// left edge
+				pixels[i][4-start]=color;	// right edge
+			}
+		}
+		// send frames
+		send_frame(pixels2frame(pixels));
+		frame_index = (frame_index+1) % 4;
+	}
+  send_brightness(48);
+ 	setInterval(animate, 200);	// 100ms interval
+
+</script>

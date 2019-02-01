@@ -1,0 +1,9 @@
+<font size=20><label id='counter_label'>0</label></font>
+<script>
+var counter = 0;
+function animate() {
+  counter++;
+  document.getElementById('counter_label').innerHTML = counter;
+}
+setInterval(animate, 1000);
+</script>

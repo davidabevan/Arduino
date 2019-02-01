@@ -1,0 +1,54 @@
+<script>
+	var xhr=new XMLHttpRequest();
+	function send_frame(frame) {
+		xhr.open('GET','http://192.168.4.1/cc?pixels='+frame,true);
+		xhr.send();
+	}
+	function send_brightness(brightness) {
+		xhr.open('GET','http://192.168.4.1/cc?brightness='+brightness,true);
+		xhr.send();
+	}
+  function color2hex(c) {
+    function hex(x) { return ('0' + parseInt(x).toString(16)).slice(-2); }
+ 		return '' + hex((c>>16)&0xFF) + hex((c>>8)&0xFF) + hex(c&0xFF);
+  }
+
+  function pixels2frame(pixels) {
+  	var comm='',r,c;
+  	for(r=0;r<7;r++) {
+  		for(c=0;c<5;c++) {
+  			comm+=color2hex(pixels[r][c]);
+  		}
+  	}
+    return comm;
+  }
+
+  // 2D array storing pixel values
+  var pixels=[[0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0]];
+  var ballx=0,bally=1;  // starting position 0, 0
+  var deltax=1,deltay=1;  // starting speed: +1, +1
+	function animate() {
+		// generate frames dynamically
+		var r, c;
+		for(r=0;r<7;r++)
+		for(c=0;c<5;c++)
+			pixels[r][c]=0;	// clear pixel buffer
+    pixels[bally][ballx] = 0x000080;
+		send_frame(pixels2frame(pixels)); // send frames
+
+    // move ball
+    if((ballx+deltax>=5)||(ballx+deltax<0)) deltax=-deltax;
+    if((bally+deltay>=7)||(bally+deltay<0)) deltay=-deltay;
+    ballx=ballx+deltax;
+    bally=bally+deltay;
+	}
+  send_brightness(48);
+ 	setInterval(animate, 100);	// 100ms interval
+
+</script>

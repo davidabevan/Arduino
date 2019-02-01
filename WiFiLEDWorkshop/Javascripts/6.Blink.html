@@ -1,0 +1,20 @@
+<script>
+	var xhr=new XMLHttpRequest();
+	function send_pixels(pixels) {
+		xhr.open('GET','http://192.168.4.1/cc?pixels='+pixels,true);
+		xhr.send();
+	}
+	function send_brightness(brightness) {
+		xhr.open('GET','http://192.168.4.1/cc?brightness='+brightness,true);
+		xhr.send();
+	}
+
+	var status = 1;
+	function blink() {
+		if(status==1) send_brightness(100);	// turn on leds
+		else send_brightness(0);	// turn off leds
+		status=1-status;
+	}
+	//send_pixels('00ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff0000002000ff00');
+ 	setInterval(blink, 500);	// 500ms interval
+</script>

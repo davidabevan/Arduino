@@ -1,0 +1,66 @@
+<p>Use arrow keys to interact with the game!</p>
+<label id='lbl_keycode'>-</label>
+<script>
+  var xhr=new XMLHttpRequest();
+  function send_frame(frame) {
+    xhr.open('GET','http://192.168.4.1/cc?pixels='+frame,true);
+    xhr.send();
+  }
+  function send_brightness(brightness) {
+    xhr.open('GET','http://192.168.4.1/cc?brightness='+brightness,true);
+    xhr.send();
+  }
+  function color2hex(c) {
+    function hex(x) { return ('0' + parseInt(x).toString(16)).slice(-2); }
+    return '' + hex((c>>16)&0xFF) + hex((c>>8)&0xFF) + hex(c&0xFF);
+  }
+
+  // 2D array storing pixel values
+  var pixels=[[0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0],
+              [0,0,0,0,0]];
+  var dots=[[0,0],[0,1],[0,2],[0,3],[0,4]];
+  var ballx=0,bally=0;              
+  
+  function dots2frame() {
+
+    var r, c, k;
+    for(r=0;r<7;r++)
+    for(c=0;c<5;c++)
+      pixels[r][c]=0; // clear pixel buffer
+    
+    for(k=0;k<5;k++) {
+      pixels[dots[k][1]][dots[k][0]] = (50*k+20)<<8;
+    }
+
+    var comm='';
+    for(r=0;r<7;r++) {
+      for(c=0;c<5;c++) {
+        comm+=color2hex(pixels[r][c]);
+      }
+    }
+    return comm;
+  }
+
+  var keyNames = ['Left', 'Up', 'Right', 'Down'];
+  var deltaxy = [[-1,0],[0,-1],[1,0],[0,1]];
+  function on_keydown(e) {
+    var keyCode = e.keyCode;
+    if(keyCode>=37 && keyCode<=40) {
+      document.getElementById('lbl_keycode').innerHTML = keyNames[keyCode-37];
+      var k;
+      for(k=0;k<4;k++) {dots[k][0]=dots[k+1][0];dots[k][1]=dots[k+1][1];}
+      dots[k][0]=(dots[k][0]+deltaxy[keyCode-37][0]+5)%5;
+      dots[k][1]=(dots[k][1]+deltaxy[keyCode-37][1]+7)%7;
+      send_frame(dots2frame());
+    }
+  }
+
+  document.addEventListener("keydown", on_keydown, false);
+  send_brightness(48);
+  send_frame(dots2frame());
+</script>
