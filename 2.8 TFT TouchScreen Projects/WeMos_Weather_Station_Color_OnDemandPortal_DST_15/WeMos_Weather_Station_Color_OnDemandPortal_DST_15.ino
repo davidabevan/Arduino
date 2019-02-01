@@ -2572,7 +2572,7 @@ disableTimers();
 tft.fillScreen(ILI9341_BLACK);
 
 // Daytime forecast...
-String weatherIcon = wunderground.getForecastIconText(TSdayIndex);
+String weatherIcon = wunderground.getForecastIconText(TSdayIndex);// Needto change 2 library files in esp8266 weatherstaion src
 ui.drawBmp("/Condition/" + weatherIcon + ".bmp", 0, 0);
 Serial.print("*** TS Forecast icon[day]:  "); Serial.print(weatherIcon); Serial.print("["); Serial.print(TSdayIndex); Serial.println("] ***");
 
@@ -2610,7 +2610,7 @@ stringWordWrap(temp, 0, LEFT, false, 88, 6);
 tft.drawFastHLine(80, 171, 80, ILI9341_CYAN);
 
 // Nighttime forecast...
-weatherIcon = wunderground.getForecastIconText(TSdayIndex+1);
+//weatherIcon = wunderground.getForecastIconText(TSdayIndex+1);
 
 // If the icon name contains any of the following, leave it as is since these have unique nighttime icons.  Otherwise,
 // we need to strip off the leading "nt_" indicating night for most icons...as these icons are common to day/night.
@@ -3027,7 +3027,7 @@ void startWebConfigPortal() {
   //save the custom parameters to FS
       if (shouldSaveConfig) {
         Serial.println("saving config");
-        DynamicJsonBuffer jsonBuffer;
+        DynamicJsonBuffer jsonBuffer;//use  version 5.13.2
         JsonObject& json = jsonBuffer.createObject();
         json["WUNDERGROUND_API_KEY"] = WUNDERGROUND_API_KEY;
         json["WUNDERGROUND_LANGUAGE"] = WUNDERGROUND_LANGUAGE;
