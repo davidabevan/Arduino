@@ -13,10 +13,10 @@ uint32_t scrollcolor = 0x002000;
 byte scrollindex = 0; // scroll character index
 
 // Neopixel object
-Adafruit_NeoPixel leds = Adafruit_NeoPixel(NUM_LEDS, PIN_LED, NEO_GRB + NEO_KHZ400);
+Adafruit_NeoPixel leds = Adafruit_NeoPixel(NUM_LEDS, PIN_LED, NEO_GRB + NEO_KHZ800);
 
 byte demo_index = 0;
-byte brightness = 48;       // default brightness: 48
+byte brightness = 28;       // default brightness: 48
 uint32_t pixels[NUM_LEDS];  // pixel buffer. this buffer allows you to set arbitrary
                             // brightness without destroying the original color values
 
@@ -167,12 +167,12 @@ void demo_rainbow() {
  * ---------------- */
 
 void drawCol(char c, int i){
-  if(i >= 0 && i < 5){
-    for(int j = 0; j < 7; j++){
+  if(i >= 0 && i < 8){
+    for(int j = 0; j < 8; j++){
         if(c & 0x1){
-          leds.setPixelColor(i*7+j, scrollcolor);
+          leds.setPixelColor(i*8+j, scrollcolor);
         } else {
-          leds.setPixelColor(i*7+j, 0);
+          leds.setPixelColor(i*8+j, 0);
         }
         c >>= 1;
     }
@@ -181,9 +181,9 @@ void drawCol(char c, int i){
 
 void drawChar(char c, int offset){
   char col;
-  for(int i = 0; i < 5; i++){
-    if(i - offset >= 0 && i - offset < 5){
-      col = pgm_read_byte(font+(c*5)+i);
+  for(int i = 0; i < 8; i++){
+    if(i - offset >= 0 && i - offset < 8){
+      col = pgm_read_byte(font+(c*8)+i);
       drawCol(col,i - offset);
     }
   }
@@ -191,9 +191,9 @@ void drawChar(char c, int offset){
 
 void demo_scrolltext() {
 
-  for(byte j = 0; j < 6; j++){
+  for(byte j = 0; j < 8; j++){
     for(byte k = 0; k < 2; k++){
-      drawChar(scrolltext.charAt(scrollindex+k),j - k*6);
+      drawChar(scrolltext.charAt(scrollindex+k),j - k*8);
       drawCol(0,5-j+k*6);
     }
     delay(scrollwait);  

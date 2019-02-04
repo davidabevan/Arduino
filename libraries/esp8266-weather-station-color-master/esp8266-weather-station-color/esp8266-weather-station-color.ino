@@ -16,6 +16,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 See more at http://blog.squix.ch
+## Wiring
+
+| ILI9341       | NodeMCU      |
+| ------------- |:-------------:|
+| MISO          | -             |
+| LED           | d8 3.3           |
+| SCK           | D5            |
+| MOSI          | D7            |
+| DC/RS         | D2            |
+| RESET         | RST           |
+| CS            | D1            |
+| GND           | GND           |
+| VCC           | 3V3           |
+
 */
 
 #include <Arduino.h>

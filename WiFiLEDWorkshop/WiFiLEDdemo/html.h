@@ -3,7 +3,7 @@ const char index_html[] PROGMEM = R"(<head>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <style>
 .color-sel { width: 24px; height: 24px; text-align: center;}
-.pixel-sel { width: 48px; height: 48px; background-color: black; }
+.pixel-sel { width: 64px; height: 64px; background-color: black; }
 button { font-size: 16px; }
 p { font-size:18px; font-style:normal; line-height:0px; }
 table { border-color:lightgray; border-collapse:collapse; }
