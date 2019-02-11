@@ -316,8 +316,8 @@ void setup()
   pinMode(LEFT_BUT, INPUT_PULLUP);
   pinMode(FIRE_BUT, INPUT_PULLUP);
  
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
+  tft.setTextSize(1);
+  tft.setTextColor(WHITE);
   
   EEPROM.get(0,HiScore);
   if(HiScore==65535)  // new unit never written to
@@ -342,14 +342,14 @@ void loop()
  
 void AttractScreen()
 {
-  display.clearDisplay();   
+  tft.clearDisplay();   
   CentreText("Play",0); 
   CentreText("Space Invaders",12); 
   CentreText("Press Fire to start",24); 
   CentreText("Hi Score     ",36);   
-  display.setCursor(80,36);
-  display.print(HiScore);
-  display.display();
+  tft.setCursor(80,36);
+  tft.print(HiScore);
+  tft.display();
   if(digitalRead(FIRE_BUT)==0){
     GameInPlay=true;
     NewGame();
@@ -1034,33 +1034,33 @@ void UpdateDisplay()
 {
   int i;
   
-  display.clearDisplay(); 
+  tft.clearDisplay(); 
   
   // Mothership bonus display if required
   if(MotherShipBonusCounter>0)
   {
     // mothership bonus
-    display.setCursor(MotherShipBonusXPos,0);
-    display.print(MotherShipBonus);
+    tft.setCursor(MotherShipBonusXPos,0);
+    tft.print(MotherShipBonus);
     MotherShipBonusCounter--;   
   }
   else
   {
     // draw score and lives, anything else can go above them
-    display.setCursor(0,0);
-    display.print(Player.Score);
-    display.setCursor(SCREEN_WIDTH-7,0);
-    display.print(Player.Lives);
+    tft.setCursor(0,0);
+    tft.print(Player.Score);
+    tft.setCursor(SCREEN_WIDTH-7,0);
+    tft.print(Player.Lives);
   }   
 
   //BOMBS
   // draw bombs next as aliens have priority of overlapping them
   for(i=0;i<MAXBOMBS;i++)  {
       if(AlienBomb[i].Status==ACTIVE)
-        display.drawBitmap(AlienBomb[i].X, AlienBomb[i].Y,  AlienBombGfx, 2, 4,WHITE);
+        tft.drawBitmap(AlienBomb[i].X, AlienBomb[i].Y,  AlienBombGfx, 2, 4,WHITE);
       else  {// must be destroyed
         if(AlienBomb[i].Status==EXPLODING)
-          display.drawBitmap(AlienBomb[i].X-4, AlienBomb[i].Y,  ExplosionGfx, 4, 8,WHITE);
+          tft.drawBitmap(AlienBomb[i].X-4, AlienBomb[i].Y,  ExplosionGfx, 4, 8,WHITE);
         // Ensure on next draw that ExplosionGfx dissapears
         AlienBomb[i].Status=DESTROYED;
       }
@@ -1075,21 +1075,21 @@ void UpdateDisplay()
         switch(down)  {
           case 0: 
             if(AnimationFrame)
-              display.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
             else
-              display.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
             break;
           case 1: 
             if(AnimationFrame)
-              display.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
             else
-              display.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
             break;
           default: 
             if(AnimationFrame)
-              display.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
             else
-              display.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
         }
       }
       else  {
@@ -1097,7 +1097,7 @@ void UpdateDisplay()
           Alien[across][down].ExplosionGfxCounter--;
           if(Alien[across][down].ExplosionGfxCounter>0)  {
             toneAC(Alien[across][down].ExplosionGfxCounter*100,10,100,true);
-            display.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  ExplosionGfx, 13, 8,WHITE);
+            tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  ExplosionGfx, 13, 8,WHITE);
           }
           else
             Alien[across][down].Ord.Status=DESTROYED;
@@ -1108,11 +1108,11 @@ void UpdateDisplay()
   
   // player
   if(Player.Ord.Status==ACTIVE)
-    display.drawBitmap(Player.Ord.X, Player.Ord.Y,  TankGfx, TANKGFX_WIDTH, TANKGFX_HEIGHT,WHITE);
+    tft.drawBitmap(Player.Ord.X, Player.Ord.Y,  TankGfx, TANKGFX_WIDTH, TANKGFX_HEIGHT,WHITE);
   else {    
     if(Player.Ord.Status==EXPLODING)  {
       for(i=0;i<TANKGFX_WIDTH;i+=2)  {
-        display.drawBitmap(Player.Ord.X+i, Player.Ord.Y,  ExplosionGfx, random(4)+2, 8,WHITE);
+        tft.drawBitmap(Player.Ord.X+i, Player.Ord.Y,  ExplosionGfx, random(4)+2, 8,WHITE);
       }
       Player.ExplosionGfxCounter--;
       if(Player.ExplosionGfxCounter==0)  {
@@ -1123,17 +1123,17 @@ void UpdateDisplay()
   }
   //missile  
   if(Missile.Status==ACTIVE)
-    display.drawBitmap(Missile.X, Missile.Y,  MissileGfx, MISSILE_WIDTH, MISSILE_HEIGHT,WHITE);
+    tft.drawBitmap(Missile.X, Missile.Y,  MissileGfx, MISSILE_WIDTH, MISSILE_HEIGHT,WHITE);
 
   // mothership (not bonus if hit)
   if(MotherShip.Ord.Status==ACTIVE)
-    display.drawBitmap(MotherShip.Ord.X, MotherShip.Ord.Y,  MotherShipGfx, MOTHERSHIP_WIDTH, MOTHERSHIP_HEIGHT,WHITE);
+    tft.drawBitmap(MotherShip.Ord.X, MotherShip.Ord.Y,  MotherShipGfx, MOTHERSHIP_WIDTH, MOTHERSHIP_HEIGHT,WHITE);
   else
   {
     if(MotherShip.Ord.Status==EXPLODING)  
     {
       for(i=0;i<MOTHERSHIP_WIDTH;i+=2)  {
-        display.drawBitmap(MotherShip.Ord.X+i, MotherShip.Ord.Y,  ExplosionGfx, random(4)+2, MOTHERSHIP_HEIGHT,WHITE);
+        tft.drawBitmap(MotherShip.Ord.X+i, MotherShip.Ord.Y,  ExplosionGfx, random(4)+2, MOTHERSHIP_HEIGHT,WHITE);
       }
       toneAC(MotherShip.ExplosionGfxCounter*50,10,100,true);
       MotherShip.ExplosionGfxCounter--;
@@ -1147,9 +1147,9 @@ void UpdateDisplay()
   
   for(i=0;i<NUM_BASES;i++)  {    
     if(Base[i].Ord.Status==ACTIVE)
-      display.drawBitmap(Base[i].Ord.X, Base[i].Ord.Y,  Base[i].Gfx, BASE_WIDTH, BASE_HEIGHT,WHITE,true);
+      tft.drawBitmap(Base[i].Ord.X, Base[i].Ord.Y,  Base[i].Gfx, BASE_WIDTH, BASE_HEIGHT,WHITE,true);
   }
-  display.display();
+  tft.display();
 }
 
 void LoseLife()  {
@@ -1173,17 +1173,17 @@ void LoseLife()  {
 
 void GameOver()  {  
   GameInPlay=false;
-  display.clearDisplay();   
+  tft.clearDisplay();   
   CentreText("Player 1",0); 
   CentreText("Game Over",12);   
   CentreText("Score ",24);   
-  display.print(Player.Score);
+  tft.print(Player.Score);
   if(Player.Score>HiScore)
   {
     CentreText("NEW HIGH SCORE!!!",36);
     CentreText("**CONGRATULATIONS**",48);    
   }
-  display.display();
+  tft.display();
   if(Player.Score>HiScore){    
     HiScore=Player.Score;
     EEPROM.put(0,HiScore);
