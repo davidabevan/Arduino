@@ -317,7 +317,7 @@ void setup()
   pinMode(FIRE_BUT, INPUT_PULLUP);
  
   tft.setTextSize(1);
-  tft.setTextColor(WHITE);
+  tft.setTextColor(ILI9341_WHITE);
   
   EEPROM.get(0,HiScore);
   if(HiScore==65535)  // new unit never written to
@@ -1057,10 +1057,10 @@ void UpdateDisplay()
   // draw bombs next as aliens have priority of overlapping them
   for(i=0;i<MAXBOMBS;i++)  {
       if(AlienBomb[i].Status==ACTIVE)
-        tft.drawBitmap(AlienBomb[i].X, AlienBomb[i].Y,  AlienBombGfx, 2, 4,WHITE);
+        tft.drawBitmap(AlienBomb[i].X, AlienBomb[i].Y,  AlienBombGfx, 2, 4,ILI9341_WHITE);
       else  {// must be destroyed
         if(AlienBomb[i].Status==EXPLODING)
-          tft.drawBitmap(AlienBomb[i].X-4, AlienBomb[i].Y,  ExplosionGfx, 4, 8,WHITE);
+          tft.drawBitmap(AlienBomb[i].X-4, AlienBomb[i].Y,  ExplosionGfx, 4, 8,ILI9341_WHITE);
         // Ensure on next draw that ExplosionGfx dissapears
         AlienBomb[i].Status=DESTROYED;
       }
@@ -1075,21 +1075,21 @@ void UpdateDisplay()
         switch(down)  {
           case 0: 
             if(AnimationFrame)
-              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx, AlienWidth[down],INVADER_HEIGHT,ILI9341_WHITE);
             else
-              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderTopGfx2, AlienWidth[down],INVADER_HEIGHT,ILI9341_WHITE);
             break;
           case 1: 
             if(AnimationFrame)
-              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx, AlienWidth[down],INVADER_HEIGHT,ILI9341_WHITE);
             else
-              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderMiddleGfx2, AlienWidth[down],INVADER_HEIGHT,ILI9341_WHITE);
             break;
           default: 
             if(AnimationFrame)
-              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx, AlienWidth[down],INVADER_HEIGHT,ILI9341_WHITE);
             else
-              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx2, AlienWidth[down],INVADER_HEIGHT,WHITE);
+              tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  InvaderBottomGfx2, AlienWidth[down],INVADER_HEIGHT,ILI9341_WHITE);
         }
       }
       else  {
@@ -1097,7 +1097,7 @@ void UpdateDisplay()
           Alien[across][down].ExplosionGfxCounter--;
           if(Alien[across][down].ExplosionGfxCounter>0)  {
             toneAC(Alien[across][down].ExplosionGfxCounter*100,10,100,true);
-            tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  ExplosionGfx, 13, 8,WHITE);
+            tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  ExplosionGfx, 13, 8,ILI9341_WHITE);
           }
           else
             Alien[across][down].Ord.Status=DESTROYED;
@@ -1108,11 +1108,11 @@ void UpdateDisplay()
   
   // player
   if(Player.Ord.Status==ACTIVE)
-    tft.drawBitmap(Player.Ord.X, Player.Ord.Y,  TankGfx, TANKGFX_WIDTH, TANKGFX_HEIGHT,WHITE);
+    tft.drawBitmap(Player.Ord.X, Player.Ord.Y,  TankGfx, TANKGFX_WIDTH, TANKGFX_HEIGHT,ILI9341_WHITE);
   else {    
     if(Player.Ord.Status==EXPLODING)  {
       for(i=0;i<TANKGFX_WIDTH;i+=2)  {
-        tft.drawBitmap(Player.Ord.X+i, Player.Ord.Y,  ExplosionGfx, random(4)+2, 8,WHITE);
+        tft.drawBitmap(Player.Ord.X+i, Player.Ord.Y,  ExplosionGfx, random(4)+2, 8,ILI9341_WHITE);
       }
       Player.ExplosionGfxCounter--;
       if(Player.ExplosionGfxCounter==0)  {
@@ -1123,17 +1123,17 @@ void UpdateDisplay()
   }
   //missile  
   if(Missile.Status==ACTIVE)
-    tft.drawBitmap(Missile.X, Missile.Y,  MissileGfx, MISSILE_WIDTH, MISSILE_HEIGHT,WHITE);
+    tft.drawBitmap(Missile.X, Missile.Y,  MissileGfx, MISSILE_WIDTH, MISSILE_HEIGHT,ILI9341_WHITE);
 
   // mothership (not bonus if hit)
   if(MotherShip.Ord.Status==ACTIVE)
-    tft.drawBitmap(MotherShip.Ord.X, MotherShip.Ord.Y,  MotherShipGfx, MOTHERSHIP_WIDTH, MOTHERSHIP_HEIGHT,WHITE);
+    tft.drawBitmap(MotherShip.Ord.X, MotherShip.Ord.Y,  MotherShipGfx, MOTHERSHIP_WIDTH, MOTHERSHIP_HEIGHT,ILI9341_WHITE);
   else
   {
     if(MotherShip.Ord.Status==EXPLODING)  
     {
       for(i=0;i<MOTHERSHIP_WIDTH;i+=2)  {
-        tft.drawBitmap(MotherShip.Ord.X+i, MotherShip.Ord.Y,  ExplosionGfx, random(4)+2, MOTHERSHIP_HEIGHT,WHITE);
+        tft.drawBitmap(MotherShip.Ord.X+i, MotherShip.Ord.Y,  ExplosionGfx, random(4)+2, MOTHERSHIP_HEIGHT,ILI9341_WHITE);
       }
       toneAC(MotherShip.ExplosionGfxCounter*50,10,100,true);
       MotherShip.ExplosionGfxCounter--;
@@ -1147,7 +1147,7 @@ void UpdateDisplay()
   
   for(i=0;i<NUM_BASES;i++)  {    
     if(Base[i].Ord.Status==ACTIVE)
-      tft.drawBitmap(Base[i].Ord.X, Base[i].Ord.Y,  Base[i].Gfx, BASE_WIDTH, BASE_HEIGHT,WHITE,true);
+      tft.drawBitmap(Base[i].Ord.X, Base[i].Ord.Y,  Base[i].Gfx, BASE_WIDTH, BASE_HEIGHT,ILI9341_WHITE,true);
   }
   tft.display();
 }
