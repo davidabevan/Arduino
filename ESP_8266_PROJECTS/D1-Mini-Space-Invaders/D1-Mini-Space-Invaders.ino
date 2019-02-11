@@ -4,7 +4,7 @@
 #define TFT_CS   D1  //19
 #define TFT_DC   D2
 // Speaker to D9 D10 may use 100 ohm resistor
-#include <toneAC.h>
+//#include <toneAC.h>
 #include <EEPROM.h>
  
 // DISPLAY SETTINGS
@@ -25,7 +25,8 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 #define FIRE_BUT 6
 #define RIGHT_BUT 5
 #define LEFT_BUT 4
-
+signed int SCREEN_WIDTH=620;
+signed int SCREEN_HEIGHT=310;
 
 // Mothership
 #define MOTHERSHIP_HEIGHT 4
@@ -342,14 +343,14 @@ void loop()
  
 void AttractScreen()
 {
-  tft.clearDisplay();   
+//  tft.clearDisplay();   
   CentreText("Play",0); 
   CentreText("Space Invaders",12); 
   CentreText("Press Fire to start",24); 
   CentreText("Hi Score     ",36);   
   tft.setCursor(80,36);
   tft.print(HiScore);
-  tft.display();
+//  tft.display();
   if(digitalRead(FIRE_BUT)==0){
     GameInPlay=true;
     NewGame();
@@ -388,7 +389,7 @@ unsigned char GetScoreForAlien(int RowNumber)
 
 void MotherShipPhysics()  {
   if(MotherShip.Ord.Status==ACTIVE)  {// spawned, move it
-    toneAC((MotherShip.Ord.X % 8)*500,7,200,true);
+//    tone((MotherShip.Ord.X % 8)*500,7,200,true);
     MotherShip.Ord.X+=MotherShipSpeed;
     if(MotherShipSpeed>0)   // going left to right , check if off right hand side
     {
@@ -468,7 +469,7 @@ void AlienControl()
 
     // play background music note if other higher priority sounds not playing
     if((ShootCompleted)&(MotherShip.Ord.Status!=ACTIVE))  {
-      toneAC(Music[MusicIndex],2,100,true);
+      tone(Music[MusicIndex],2,100,true);
       MusicIndex++;
       if(MusicIndex==sizeof(Music))
         MusicIndex=0;
@@ -939,7 +940,7 @@ void MissileAndAlienCollisions()
           {
               // missile hit
               Alien[across][down].Ord.Status=EXPLODING;
-              toneAC(700,10,100,true);
+//              tone(700,10,100,true);
               Missile.Status=DESTROYED;
               Player.Score+=GetScoreForAlien(down);
               Player.AliensDestroyed++;
@@ -1014,7 +1015,7 @@ int LeftMostPos()  {
   //returns x pos of left most alien
   int Across=0;
   int Down;
-  int Smallest=SCREEN_WIDTH*2;
+  int Smallest=SCREEN_WIDTH*2;// removed screen width
   while(Across<NUM_ALIEN_COLUMNS){
     Down=0;
     while(Down<3){
@@ -1034,7 +1035,7 @@ void UpdateDisplay()
 {
   int i;
   
-  tft.clearDisplay(); 
+//  tft.clearDisplay(); 
   
   // Mothership bonus display if required
   if(MotherShipBonusCounter>0)
@@ -1049,7 +1050,7 @@ void UpdateDisplay()
     // draw score and lives, anything else can go above them
     tft.setCursor(0,0);
     tft.print(Player.Score);
-    tft.setCursor(SCREEN_WIDTH-7,0);
+    tft.setCursor(620-7,0);// removed screen width
     tft.print(Player.Lives);
   }   
 
@@ -1096,7 +1097,7 @@ void UpdateDisplay()
         if(Alien[across][down].Ord.Status==EXPLODING){
           Alien[across][down].ExplosionGfxCounter--;
           if(Alien[across][down].ExplosionGfxCounter>0)  {
-            toneAC(Alien[across][down].ExplosionGfxCounter*100,10,100,true);
+//            tone(Alien[across][down].ExplosionGfxCounter*100,10,100,true);
             tft.drawBitmap(Alien[across][down].Ord.X, Alien[across][down].Ord.Y,  ExplosionGfx, 13, 8,ILI9341_WHITE);
           }
           else
@@ -1135,7 +1136,7 @@ void UpdateDisplay()
       for(i=0;i<MOTHERSHIP_WIDTH;i+=2)  {
         tft.drawBitmap(MotherShip.Ord.X+i, MotherShip.Ord.Y,  ExplosionGfx, random(4)+2, MOTHERSHIP_HEIGHT,ILI9341_WHITE);
       }
-      toneAC(MotherShip.ExplosionGfxCounter*50,10,100,true);
+   //   tone(MotherShip.ExplosionGfxCounter*50,10,100,true);
       MotherShip.ExplosionGfxCounter--;
       if(MotherShip.ExplosionGfxCounter==0)  {
         MotherShip.Ord.Status=DESTROYED;
@@ -1149,7 +1150,7 @@ void UpdateDisplay()
     if(Base[i].Ord.Status==ACTIVE)
       tft.drawBitmap(Base[i].Ord.X, Base[i].Ord.Y,  Base[i].Gfx, BASE_WIDTH, BASE_HEIGHT,ILI9341_WHITE,true);
   }
-  tft.display();
+//  tft.display();
 }
 
 void LoseLife()  {
@@ -1173,7 +1174,7 @@ void LoseLife()  {
 
 void GameOver()  {  
   GameInPlay=false;
-  tft.clearDisplay();   
+//  tft.clearDisplay();   
   CentreText("Player 1",0); 
   CentreText("Game Over",12);   
   CentreText("Score ",24);   
@@ -1183,7 +1184,7 @@ void GameOver()  {
     CentreText("NEW HIGH SCORE!!!",36);
     CentreText("**CONGRATULATIONS**",48);    
   }
-  tft.display();
+//  tft.display();
   if(Player.Score>HiScore){    
     HiScore=Player.Score;
     EEPROM.put(0,HiScore);
@@ -1199,17 +1200,17 @@ void PlayRewardMusic()
   unsigned char NoteDurations[] = { 40, 20, 20, 40, 30, 50, 30, 10,30 };
   for(int i=0;i<9;i++)
   {
-    toneAC(Notes[i]*10,10,0,true);
+   // tone(Notes[i]*10,10,0,true);
     delay(NoteDurations[i]*10);   // time not plays for
     noToneAC();                   // stop note
     delay(20);                    // small delay between notes
   }
-  noToneAC();
+//  noToneAC();
 }
 
 
 void DisplayPlayerAndLives(PlayerStruct *Player)  {
-  tft.clearDisplay(); 
+//  tft.clearDisplay(); 
   CentreText("Player 1",0);
   CentreText("Score ",12);   
   tft.print(Player->Score);
@@ -1217,7 +1218,7 @@ void DisplayPlayerAndLives(PlayerStruct *Player)  {
   tft.print(Player->Lives); 
   CentreText("Level ",36);   
   tft.print(Player->Level);   
-  tft.display();
+//  tft.display();
   delay(2000);
   Player->Ord.X=PLAYER_X_START;
 }
@@ -1225,7 +1226,7 @@ void DisplayPlayerAndLives(PlayerStruct *Player)  {
 
 void CentreText(const char *Text,unsigned char Y)  {
   // centres text on screen
-  tft.setCursor(int((float)(SCREEN_WIDTH)/2-((strlen(Text)*6)/2)),Y);
+  tft.setCursor(int((float)(620)/2-((strlen(Text)*6)/2)),Y);// removed SCREEN_WIDTH Exchanged for 620
   tft.print(Text);
 }
 
@@ -1267,7 +1268,8 @@ void NextLevel(PlayerStruct *Player)  {
 void InitBases()  {
   // Bases need to be re-built!
   uint8_t TheByte;
-  int Spacing=(SCREEN_WIDTH-(NUM_BASES*BASE_WIDTH))/NUM_BASES;
+  //int Spacing=(SCREEN_WIDTH-(NUM_BASES*BASE_WIDTH))/NUM_BASES;
+  int Spacing=(620-(NUM_BASES*BASE_WIDTH))/NUM_BASES;
   for(int i=0;i<NUM_BASES;i++)  
   {    
     for(int DataIdx=0;DataIdx<BASE_HEIGHT*BASE_WIDTH_IN_BYTES;DataIdx++)  
