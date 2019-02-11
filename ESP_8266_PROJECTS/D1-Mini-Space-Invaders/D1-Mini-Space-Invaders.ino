@@ -3,6 +3,7 @@
 #include <Adafruit_ILI9341.h> // Hardware-specific library
 #define TFT_CS   D1  //19
 #define TFT_DC   D2
+#define led_pin  D8 //D8
 // Speaker to D9 D10 may use 100 ohm resistor
 //#include <toneAC.h>
 #include <EEPROM.h>
@@ -22,9 +23,9 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 //Yellow to D4
 //Purple to D5
 //Green  to D6
-#define FIRE_BUT 6
-#define RIGHT_BUT 5
-#define LEFT_BUT 4
+#define FIRE_BUT D6
+#define RIGHT_BUT D4
+#define LEFT_BUT D3
 signed int SCREEN_WIDTH=620;
 signed int SCREEN_HEIGHT=310;
 
@@ -307,9 +308,11 @@ bool ShootCompleted=true;                     // stops music when this is false,
 void setup() 
 {
   //display.begin(SSD1306_SWITCHCAPVCC,OLED_ADDRESS);
+   pinMode(led_pin, OUTPUT); // Lcd led pin
+ digitalWrite(D8, HIGH);// Turn on lcd led backight
   tft.begin();
-  tft.fillScreen(ILI9341_BLACK);
-  tft.setRotation(1);
+  tft.fillScreen(ILI9341_RED);
+  tft.setRotation(0);
   InitAliens(0); 
   InitPlayer();
   
@@ -396,7 +399,7 @@ void MotherShipPhysics()  {
       if(MotherShip.Ord.X>=SCREEN_WIDTH)  
       {
         MotherShip.Ord.Status=DESTROYED;
-        noToneAC();
+//        noToneAC();
       }
     }
     else    // going right to left , check if off left hand side
@@ -404,7 +407,7 @@ void MotherShipPhysics()  {
       if(MotherShip.Ord.X+MOTHERSHIP_WIDTH<0)  
       {
         MotherShip.Ord.Status=DESTROYED;
-        noToneAC();
+//        noToneAC();
       }
     }
     
@@ -441,7 +444,7 @@ void PlayerControl()  {
     Missile.X=Player.Ord.X+(TANKGFX_WIDTH/2);
     Missile.Y=PLAYER_Y_START;
     Missile.Status=ACTIVE;
-    noiseAC(200,10,&ShootCompleted);
+//    noiseAC(200,10,&ShootCompleted);
   }
 }
 
@@ -469,7 +472,7 @@ void AlienControl()
 
     // play background music note if other higher priority sounds not playing
     if((ShootCompleted)&(MotherShip.Ord.Status!=ACTIVE))  {
-      tone(Music[MusicIndex],2,100,true);
+//      tone(Music[MusicIndex],2,100,true);
       MusicIndex++;
       if(MusicIndex==sizeof(Music))
         MusicIndex=0;
@@ -799,7 +802,7 @@ void PlayerHit()  {
   Player.Ord.Status=EXPLODING;
   Player.ExplosionGfxCounter=PLAYER_EXPLOSION_TIME;
   Missile.Status=DESTROYED;
-  noiseAC(500,10,&PlayerExplosionNoiseCompleted);
+//  noiseAC(500,10,&PlayerExplosionNoiseCompleted);
 }
 
 void CheckCollisions()
@@ -1202,7 +1205,7 @@ void PlayRewardMusic()
   {
    // tone(Notes[i]*10,10,0,true);
     delay(NoteDurations[i]*10);   // time not plays for
-    noToneAC();                   // stop note
+//    noToneAC();                   // stop note
     delay(20);                    // small delay between notes
   }
 //  noToneAC();
