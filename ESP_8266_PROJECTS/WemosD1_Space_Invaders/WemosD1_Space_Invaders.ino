@@ -341,36 +341,7 @@ void levelUp() {
 }
 //===============================================================
 
-boolean alienShot(int num) {
-  for (int i; i < 5; i++) {
-    if (fFireAge[i] < 20 and fFireAge[i] > 0) {
-      if (fFireX[i] > findAlienX(num) - 4 and fFireX[i] < findAlienX(num) + 28 and fFireY[i] < findAlienY(num) + 22 and fFireY[i] > findAlienY(num) + 4) {
-        fFireAge[i] = 20;
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
-boolean onPlayer(int num) {
-  if (findAlienX(num) - shipX < 24 and findAlienX(num) - shipX > -28 and findAlienY(num) - shipY < 32 and findAlienY(num) - shipY > -22) {
-    doSplode = true;
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
-boolean exceedBoundary(int num) {
-  if (findAlienY(num) > 218) {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
 
 void moveAliens() {
   for (int i = 0; i < 18; i++) {

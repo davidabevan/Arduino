@@ -52,12 +52,12 @@ int oldAlienX = 7;
 int oldAlienY = 25;
 int changeAlienX = 6;
 int changeAlienY = 0;
-int alienSpeed = 200;
+int alienSpeed = 100;//200 lower = faster
 int oldAlienSpeed;
 int aFireX[5];
 int aFireY[5];
 boolean aFireAge[5];
-int chanceOfFire = 2;
+int chanceOfFire = 1;//2db testing
 //================================ bitmaps ========================
 //your starship
 const int shipImgW = 14;
@@ -262,34 +262,34 @@ void levelUp() {
   play = true;
 }
 //==================================================================
-boolean alienShot(int num) {
+boolean alienShot(int num) {// seems to tell pixel collision
   for (int i; i < 5; i++) {
     if (fFireAge[i] < 20 and fFireAge[i] > 0) {
       if (fFireX[i] > findAlienX(num) - 4 and fFireX[i] < 
          findAlienX(num) + 28 and fFireY[i] < findAlienY(num) + 
          22 and fFireY[i] > findAlienY(num) + 4) {
         fFireAge[i] = 20;
-        return true;
+        return true;// collision test db
       }
     }
   }
-  return false;
-}
+  return false;// if set true game levels up and up
+}              // must detect shooting of all aliens then when correct number reached levels up db
 //==================================================================
 boolean onPlayer(int num) {
   if (findAlienX(num) - shipX < 24 and findAlienX(num) - 
       shipX > -28 and findAlienY(num) - shipY < 32 and 
       findAlienY(num) - shipY > -22) {
-    doSplode = true;
+    doSplode = true;// when active eg true  ship explodes
     return true;
-  } else { return false;}
+  } else { return false;}// when true game over screen
 }
 //==================================================================
 boolean exceedBoundary(int num) {
   if (findAlienY(num) > 218) { return true;
   } else { return false;
   }
-}
+}// lower boundry when eceeded ends game
 //==================================================================
 void moveAliens() {
   for (int i = 0; i < 18; i++) {
@@ -304,11 +304,11 @@ void moveAliens() {
   if (changeAlienY != 0) { changeAlienY = 0; }
 }
 //==================================================================
-int findAlienX   (int num) { return alienX + 42*(num % 6); }
+int findAlienX   (int num) { return alienX + 42*(num % 6); }//seems to layout aliens
 //==================================================================
-int findAlienY   (int num) { return alienY + 33*(num / 6); }
+int findAlienY   (int num) { return alienY + 33*(num / 6); }// when changed affect alien gris and collision detection
 //==================================================================
-int findOldAlienX(int num) { return oldAlienX + 42*(num % 6); }
+int findOldAlienX(int num) { return oldAlienX + 42*(num % 6); }// also the aliens dont redraw/refresh properly
 //==================================================================
 int findOldAlienY(int num) { return oldAlienY + 33*(num / 6); }
 //---------------------------Player---------------------------------
@@ -321,15 +321,15 @@ void fireDaLazer() {
    fFireAge[bulletNo] = 1;
    fFireX[bulletNo] = shipX + 13;
    fFireY[bulletNo] = shipY - 4;
-   M5.Lcd.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,3,MAGENTA);
+   M5.Lcd.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,3,MAGENTA);//dont know alien fire??????
   }
   fire = false;
 }
 //==================================================================
 void keepFirinDaLazer(int bulletNo) {
-  M5.Lcd.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,BLACK);
+  M5.Lcd.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,BLACK);//redraws a black square behind current thusly making animation
   fFireY[bulletNo] -= 8;
-  M5.Lcd.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,MAGENTA);
+  M5.Lcd.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,MAGENTA);// bullet colour when black bullrts invisible
   fFireAge[bulletNo] += 1;
 }
 //==================================================================

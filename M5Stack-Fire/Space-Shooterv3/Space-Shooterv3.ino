@@ -12,20 +12,6 @@
 // Controller   : Buttons A = LEFT, B = RIGHT, C = START or SHOOTING
 // Github:https://macsbug.wordpress.com/2018/01/12/esp32-spaceshooter-with-m5stack/
 //===================================================================
-/*
-| ILI9341       | NodeMCU      |
-| ------------- |:-------------:|
-| MISO          | -             |
-| LED           | d8 3.3           |
-| SCK           | D5            |
-| MOSI          | D7            |
-| DC/RS         | D2            |
-| RESET         | RST           |
-| CS            | D1            |
-| GND           | GND           |
-| VCC           | 3V3           |
-
-*/
 //=========================== setup ==============================================
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
@@ -85,7 +71,7 @@ int oldAlienX = 7;
 int oldAlienY = 25;
 int changeAlienX = 6;
 int changeAlienY = 0;
-int alienSpeed = 200;// lower faster
+int alienSpeed = 200;
 int oldAlienSpeed;
 int aFireX[5];
 int aFireY[5];
@@ -122,23 +108,22 @@ void setup() {
   memset(alienLive, true, 18);
   memset(aFireX, 0, 5);
   memset(aFireY, 0, 5);
-  memset(aFireAge, 0, 5);
-   pinMode(led_pin, OUTPUT); // Lcd led pin
-   //M5.Lcd.setBrightness(240);
-   digitalWrite(D8, HIGH);// Turn on lcd led backight
-  tft.begin();
-  tft.setRotation(1);
+  memset(aFireAge, 0, 5);//0, 5 test collisions db
+ pinMode(led_pin, OUTPUT); // Lcd led pin
+ digitalWrite(D8, HIGH);// Turn on lcd led backight
+ tft.begin();
+  tft.setRotation(1);//tft.setRotation(3);
   tft.fillScreen(ILI9341_BLACK);
   tft.setTextColor(0x5E85);
   tft.setTextSize(4);
   randomSeed(analogRead(6));
   pinMode(BUTTON_A_PIN, INPUT_PULLUP);
   pinMode(BUTTON_B_PIN, INPUT_PULLUP);
-  pinMode(BUTTON_C_PIN, INPUT_PULLUP); 
+  pinMode(BUTTON_C_PIN, INPUT_PULLUP);
 }
 //==================================================================
 void loop() {
-  if(digitalRead(BUTTON_A_PIN)==0) { left  () ;}
+ if(digitalRead(BUTTON_A_PIN)==0) { left  () ;}
   if(digitalRead(BUTTON_B_PIN)==0) { right  () ;}
   if(digitalRead(BUTTON_C_PIN)==0) { select  () ;}
   //-------------Start Screen--------------
@@ -325,7 +310,7 @@ boolean exceedBoundary(int num) {
   if (findAlienY(num) > 218) { return true;
   } else { return false;
   }
-}// lower boundry when eceeded ends game
+}
 //==================================================================
 void moveAliens() {
   for (int i = 0; i < 18; i++) {
@@ -340,11 +325,11 @@ void moveAliens() {
   if (changeAlienY != 0) { changeAlienY = 0; }
 }
 //==================================================================
-int findAlienX   (int num) { return alienX + 42*(num % 6); }}//seems to layout aliens
+int findAlienX   (int num) { return alienX + 42*(num % 6); }
 //==================================================================
-int findAlienY   (int num) { return alienY + 33*(num / 6); }// when changed affect alien gris and collision detection
+int findAlienY   (int num) { return alienY + 33*(num / 6); }
 //==================================================================
-int findOldAlienX(int num) { return oldAlienX + 42*(num % 6); }// also the aliens dont redraw/refresh properly
+int findOldAlienX(int num) { return oldAlienX + 42*(num % 6); }
 //==================================================================
 int findOldAlienY(int num) { return oldAlienY + 33*(num / 6); }
 //---------------------------Player---------------------------------
@@ -357,15 +342,15 @@ void fireDaLazer() {
    fFireAge[bulletNo] = 1;
    fFireX[bulletNo] = shipX + 13;
    fFireY[bulletNo] = shipY - 4;
-   tft.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,3,ILI9341_MAGENTA);//dont know alien fire??????
+   tft.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,3,ILI9341_MAGENTA);
   }
   fire = false;
 }
 //==================================================================
 void keepFirinDaLazer(int bulletNo) {
-  tft.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,ILI9341_BLACK);//redraws a black square behind current thusly making animation
+  tft.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,ILI9341_BLACK);
   fFireY[bulletNo] -= 8;
-  tft.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,ILI9341_MAGENTA);// bullet colour when black bullrts invisible
+  tft.fillRect(fFireX[bulletNo],fFireY[bulletNo],4,4,ILI9341_MAGENTA);
   fFireAge[bulletNo] += 1;
 }
 //==================================================================
@@ -399,7 +384,7 @@ void drawBitmap(char img[],int imgW,int imgH,int x,int y,int scale){
     else if (curPix == 'Y') { cellColor = ILI9341_YELLOW; }
     else if (curPix == 'B') { cellColor = ILI9341_BLUE; }
     else if (curPix == 'R') { cellColor = ILI9341_RED; }
-    else if (curPix == 'G') { cellColor = 0x5E85; }
+    else if (curPix == 'G') { cellColor = ILI9341_GREEN; }//0x5E85; }
     if (curPix != 'Z' and scale == 1) {
       tft.drawPixel(x + i % imgW, y + i / imgW, cellColor);
     }
