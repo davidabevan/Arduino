@@ -1,3 +1,10 @@
+// Adaption of Arduino Nano space Invaders b xtronical
+// For ESP8266-WemosD1
+//Adaption Dave Bevan 
+// February 2019
+
+
+
 //#include <Adafruit_SSD1306.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ILI9341.h> // Hardware-specific library
@@ -26,8 +33,8 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 #define FIRE_BUT D6
 #define RIGHT_BUT D4
 #define LEFT_BUT D3
-signed int SCREEN_WIDTH=620;
-signed int SCREEN_HEIGHT=310;
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
 
 // Mothership
 #define MOTHERSHIP_HEIGHT 4
@@ -312,7 +319,7 @@ void setup()
  digitalWrite(D8, HIGH);// Turn on lcd led backight
   tft.begin();
   tft.fillScreen(ILI9341_RED);
-  tft.setRotation(0);
+  tft.setRotation(3);
   InitAliens(0); 
   InitPlayer();
   
@@ -346,7 +353,8 @@ void loop()
  
 void AttractScreen()
 {
-//  tft.clearDisplay();   
+//  tft.clearDisplay();  
+  //tft.fillScreen(ILI9341_RED);
   CentreText("Play",0); 
   CentreText("Space Invaders",12); 
   CentreText("Press Fire to start",24); 
@@ -1039,7 +1047,7 @@ void UpdateDisplay()
   int i;
   
 //  tft.clearDisplay(); 
-  
+  // tft.fillScreen(ILI9341_RED);
   // Mothership bonus display if required
   if(MotherShipBonusCounter>0)
   {
@@ -1053,7 +1061,7 @@ void UpdateDisplay()
     // draw score and lives, anything else can go above them
     tft.setCursor(0,0);
     tft.print(Player.Score);
-    tft.setCursor(620-7,0);// removed screen width
+    tft.setCursor(SCREEN_WIDTH -7,0);// removed screen width
     tft.print(Player.Lives);
   }   
 
@@ -1178,6 +1186,7 @@ void LoseLife()  {
 void GameOver()  {  
   GameInPlay=false;
 //  tft.clearDisplay();   
+ tft.fillScreen(ILI9341_RED);
   CentreText("Player 1",0); 
   CentreText("Game Over",12);   
   CentreText("Score ",24);   
@@ -1213,7 +1222,8 @@ void PlayRewardMusic()
 
 
 void DisplayPlayerAndLives(PlayerStruct *Player)  {
-//  tft.clearDisplay(); 
+//  tft.clearDisplay();
+  tft.fillScreen(ILI9341_RED);
   CentreText("Player 1",0);
   CentreText("Score ",12);   
   tft.print(Player->Score);
@@ -1229,7 +1239,7 @@ void DisplayPlayerAndLives(PlayerStruct *Player)  {
 
 void CentreText(const char *Text,unsigned char Y)  {
   // centres text on screen
-  tft.setCursor(int((float)(620)/2-((strlen(Text)*6)/2)),Y);// removed SCREEN_WIDTH Exchanged for 620
+  tft.setCursor(int((float)(SCREEN_WIDTH)/2-((strlen(Text)*6)/2)),Y);// removed SCREEN_WIDTH Exchanged for 620
   tft.print(Text);
 }
 
@@ -1272,7 +1282,7 @@ void InitBases()  {
   // Bases need to be re-built!
   uint8_t TheByte;
   //int Spacing=(SCREEN_WIDTH-(NUM_BASES*BASE_WIDTH))/NUM_BASES;
-  int Spacing=(620-(NUM_BASES*BASE_WIDTH))/NUM_BASES;
+  int Spacing=(SCREEN_WIDTH-(NUM_BASES*BASE_WIDTH))/NUM_BASES;
   for(int i=0;i<NUM_BASES;i++)  
   {    
     for(int DataIdx=0;DataIdx<BASE_HEIGHT*BASE_WIDTH_IN_BYTES;DataIdx++)  
