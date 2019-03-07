@@ -1,0 +1,2 @@
+My Wunderground has stopped working.
+In their infinite wisdom wuio has stopped free services and my api no longer works so am testing this out
