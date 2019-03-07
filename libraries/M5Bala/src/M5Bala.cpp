@@ -1,6 +1,6 @@
 #include "M5Bala.h"
 
-#define MPU9250_ID   0x71//71
+#define MPU9250_ID   0x68//71
 #define MPU6050_ID   0x68//68
 
 M5Bala::M5Bala() {
