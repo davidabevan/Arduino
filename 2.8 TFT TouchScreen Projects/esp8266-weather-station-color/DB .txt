@@ -1,2 +1,10 @@
 My Wunderground has stopped working.
-In their infinite wisdom wuio has stopped free services and my api no longer works so am testing this out
+In their infinite wisdom wuio has stopped free services and my api no longer works so am testing this out.
+Need to create openweathermap api
+Open weather map API
+David Bevan
+dbevan79@googlemail.com
+pUffLeSqueaL1
+Api key
+0e8e64147c64fdb80045c4eed75b4b37
+

@@ -1152,12 +1152,17 @@ void updateDHT() {
 }
 
 void setDSTRules(String TZ_CITY) {
-  if (TZ_CITY == "Boston") {
-        UTC_OFFSET = -5;
-        StartRule = (dstRule) {"EDT", Second, Sun, Mar, 2, 3600}; // Eastern Daylight time = UTC/GMT -4 hours
-        EndRule = (dstRule) {"EST", First, Sun, Nov, 1, 0};       // Eastern Standard time = UTC/GMT -5 hours
+  if (TZ_CITY == "London") {
+        UTC_OFFSET = +0;
+        StartRule = (dstRule) {"GMT", Last, Sun, Mar, 2, 3600}; // Eastern Daylight time = UTC/GMT -4 hours
+        EndRule = (dstRule) {"GMT", Last, Sun, Oct, 2, 0};       // Eastern Standard time = UTC/GMT -5 hours
         #define NTP_SERVERS "us.pool.ntp.org", "time.nist.gov", "pool.ntp.org"
-        isMetric = false;
+        isMetric = true;
+        // else if (TZ_CITY == "London") {
+  //      UTC_OFFSET = +0;
+    //    StartRule = (dstRule) {"GMT", Last, Sun, Mar, 2, 3600}; // Australia Eastern Daylight time = UTC/GMT +11 hours
+      //  EndRule = (dstRule) {"GMT", Last, Sun, Oct, 2, 0};      // Australia Eastern Standard time = UTC/GMT +10 hours
+        
   } else if (TZ_CITY == "Louisville") {
         UTC_OFFSET = -5;
         StartRule = (dstRule) {"EDT", Second, Sun, Mar, 2, 3600}; // Eastern Daylight time = UTC/GMT -4 hours
