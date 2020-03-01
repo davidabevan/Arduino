@@ -1,0 +1,7 @@
+Using the Adafruit Gemma 8MHZ
+COM4 
+USBtinyISP
+Speed 9600
+
+
+Neopixel Ring 16 count as the start layout. Code switched from sample default strip to one borrowed from Doug Campbell @ https://gist.github.com/dougalcampbell/7243998
